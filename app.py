@@ -7,6 +7,6 @@ def home():
     return "Flowmate Bot is running!"
 @app.route("/callback", methods=["POST"])
 def callback():
-    reture "OK"
+    return "OK"
 if __name__== "__main__":
     app.run()
