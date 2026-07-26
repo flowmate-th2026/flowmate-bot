@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
@@ -9,4 +10,7 @@ def home():
 def callback():
     return "OK"
 if __name__== "__main__":
-    app.run()
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT",5000))
+    )
