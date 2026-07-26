@@ -8,6 +8,6 @@ def home():
 @app.route("/callback", methods=["POST"])
 def callback():
     reture "OK"
-if __name__=="__main__":
+if __name__== "__main__":
     app.run()
   
