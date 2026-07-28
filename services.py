@@ -40,12 +40,13 @@ def record_expense(amount, description):
     )
 
     return date_text, time_text
-    
+
 def get_daily_sales_report():
     thailand_time = get_thailand_time()
     date_text = thailand_time.strftime("%d/%m/%Y")
 
     sales_rows = get_sales_rows_by_date(date_text)
+    expense_rows = get_expense_rows_by_date(date_text)
 
     valid_sales = []
 
@@ -65,7 +66,37 @@ def get_daily_sales_report():
             }
         )
 
-    total_sales = sum(item["amount"] for item in valid_sales)
+    valid_expenses = []
+
+    for row in expense_rows:
+        amount_text = str(row.get("จำนวนเงิน", "0"))
+        amount_text = amount_text.replace(",", "").strip()
+
+        try:
+            amount = float(amount_text)
+        except ValueError:
+            continue
+
+        valid_expenses.append(
+            {
+                "time": str(row.get("เวลา", "")).strip(),
+                "amount": amount,
+                "description": str(
+                    row.get("รายละเอียด", "")
+                ).strip(),
+            }
+        )
+
+    total_sales = sum(
+        item["amount"] for item in valid_sales
+    )
+
+    total_expenses = sum(
+        item["amount"] for item in valid_expenses
+    )
+
+    profit = total_sales - total_expenses
+
     transaction_count = len(valid_sales)
 
     if transaction_count > 0:
@@ -74,11 +105,15 @@ def get_daily_sales_report():
         average_sales = 0
 
     latest_sales = list(reversed(valid_sales[-3:]))
+    latest_expenses = list(reversed(valid_expenses[-3:]))
 
     return {
         "date": date_text,
         "total_sales": total_sales,
+        "total_expenses": total_expenses,
+        "profit": profit,
         "transaction_count": transaction_count,
         "average_sales": average_sales,
         "latest_sales": latest_sales,
+        "latest_expenses": latest_expenses,
     }
