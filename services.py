@@ -4,8 +4,10 @@ from zoneinfo import ZoneInfo
 from sheet_service import (
     append_sale_row,
     append_expense_row,
+    append_customer_row,
     get_sales_rows_by_date,
     get_expense_rows_by_date,
+    get_customer_rows_by_date,
 )
 
 def get_thailand_time():
@@ -41,6 +43,20 @@ def record_expense(amount, description):
 
     return date_text, time_text
 
+def record_customer(customer_count):
+    thailand_time = get_thailand_time()
+
+    date_text = thailand_time.strftime("%d/%m/%Y")
+    time_text = thailand_time.strftime("%H:%M")
+
+    append_customer_row(
+        date_text=date_text,
+        time_text=time_text,
+        customer_count=customer_count,
+    )
+
+    return date_text, time_text
+    
 def get_daily_sales_report():
     thailand_time = get_thailand_time()
     date_text = thailand_time.strftime("%d/%m/%Y")
