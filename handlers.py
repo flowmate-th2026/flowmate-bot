@@ -1,6 +1,10 @@
 from linebot.models import TextSendMessage
 
-from services import record_sale, get_daily_sales_report
+from services import (
+    record_sale,
+    record_expense,
+    get_daily_sales_report,
+)
 
 def handle_text_message(event, line_bot_api):
     user_message = event.message.text.strip()
@@ -50,20 +54,69 @@ def handle_text_message(event, line_bot_api):
                     f"⏰ เวลา: {time_text}\n"
                     f"💰 ยอดขาย: {formatted_amount} บาท"
                 )
+    elif normalized_message == "ค่าใช้จ่าย":
+        reply = (
+            "💸 กรุณาใส่จำนวนเงินและรายละเอียด\n\n"
+            "ตัวอย่าง:\n"
+            "ค่าใช้จ่าย 350 ค่านม"
+        )
 
-        except ValueError:
+    elif normalized_message.startswith("ค่าใช้จ่าย "):
+        expense_text = user_message.replace("ค่าใช้จ่าย", "", 1).strip()
+        expense_parts = expense_text.split(maxsplit=1)
+
+        if not expense_parts:
             reply = (
-                "❌ รูปแบบยอดขายไม่ถูกต้อง\n\n"
-                "กรุณาพิมพ์ตัวเลข เช่น:\n"
-                "ยอดขาย 2500"
+                "❌ รูปแบบค่าใช้จ่ายไม่ถูกต้อง\n\n"
+                "ตัวอย่าง:\n"
+                "ค่าใช้จ่าย 350 ค่านม"
             )
 
-        except Exception:
-            reply = (
-                "⚠️ ระบบยังบันทึกยอดขายไม่ได้ในขณะนี้\n\n"
-                "กรุณาลองใหม่อีกครั้ง"
-            )
+        else:
+            amount_text = expense_parts[0].replace(",", "")
 
+            if len(expense_parts) > 1:
+                description = expense_parts[1].strip()
+            else:
+                description = "ไม่ระบุรายละเอียด"
+
+            try:
+                amount = float(amount_text)
+
+                if amount <= 0:
+                    reply = "❌ ค่าใช้จ่ายต้องมากกว่า 0 บาท"
+                else:
+                    date_text, time_text = record_expense(
+                        amount,
+                        description,
+                    )
+
+                    if amount.is_integer():
+                        formatted_amount = f"{amount:,.0f}"
+                    else:
+                        formatted_amount = f"{amount:,.2f}"
+
+                    reply = (
+                        "✅ บันทึกค่าใช้จ่ายเรียบร้อย\n\n"
+                        f"📅 วันที่: {date_text}\n"
+                        f"⏰ เวลา: {time_text}\n"
+                        f"💸 ค่าใช้จ่าย: {formatted_amount} บาท\n"
+                        f"📝 รายละเอียด: {description}"
+                    )
+
+            except ValueError:
+                reply = (
+                    "❌ รูปแบบค่าใช้จ่ายไม่ถูกต้อง\n\n"
+                    "กรุณาพิมพ์ตัวเลข เช่น:\n"
+                    "ค่าใช้จ่าย 350 ค่านม"
+                )
+
+            except Exception:
+                reply = (
+                    "⚠️ ระบบยังบันทึกค่าใช้จ่ายไม่ได้ในขณะนี้\n\n"
+                    "กรุณาลองใหม่อีกครั้ง"
+                )
+    
     elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
         try:
             report = get_daily_sales_report()
