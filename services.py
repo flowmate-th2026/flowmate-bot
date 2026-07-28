@@ -23,10 +23,24 @@ def record_sale(amount):
         time_text=time_text,
         amount=amount,
     )
-
+    
     return date_text, time_text
 
+def record_expense(amount, description):
+    thailand_time = get_thailand_time()
 
+    date_text = thailand_time.strftime("%d/%m/%Y")
+    time_text = thailand_time.strftime("%H:%M")
+
+    append_expense_row(
+        date_text=date_text,
+        time_text=time_text,
+        amount=amount,
+        description=description,
+    )
+
+    return date_text, time_text
+    
 def get_daily_sales_report():
     thailand_time = get_thailand_time()
     date_text = thailand_time.strftime("%d/%m/%Y")
