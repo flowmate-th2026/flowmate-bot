@@ -3,9 +3,9 @@ from linebot.models import TextSendMessage
 from services import (
     record_sale,
     record_expense,
+    record_customer,
     get_daily_sales_report,
 )
-
 
 def handle_text_message(event, line_bot_api):
     user_message = event.message.text.strip()
@@ -22,8 +22,9 @@ def handle_text_message(event, line_bot_api):
             "🤖 เมนู FlowMate\n\n"
             "1️⃣ พิมพ์ “ยอดขาย 2500” เพื่อบันทึกยอดขาย\n"
             "2️⃣ พิมพ์ “ค่าใช้จ่าย 350 ค่านม” เพื่อบันทึกค่าใช้จ่าย\n"
-            "3️⃣ พิมพ์ “รายงาน” เพื่อดูรายงานร้านค้า\n"
-            "4️⃣ พิมพ์ “ช่วยเหลือ” เพื่อดูวิธีใช้งาน"
+            "3️⃣ พิมพ์ “ลูกค้า 5” เพื่อบันทึกจำนวนลูกค้า\n"
+            "4️⃣ พิมพ์ “รายงาน” เพื่อดูรายงานร้านค้า\n"
+            "5️⃣ พิมพ์ “ช่วยเหลือ” เพื่อดูวิธีใช้งาน"
         )
 
     elif normalized_message == "ยอดขาย":
@@ -125,6 +126,45 @@ def handle_text_message(event, line_bot_api):
                 "กรุณาลองใหม่อีกครั้ง"
             )
 
+    elif normalized_message == "ลูกค้า":
+        reply = (
+            "👥 กรุณาใส่จำนวนลูกค้า\n\n"
+            "ตัวอย่าง:\n"
+            "ลูกค้า 5"
+        )
+
+    elif normalized_message.startswith("ลูกค้า "):
+        customer_text = user_message.replace("ลูกค้า", "", 1).strip()
+        customer_text = customer_text.replace(",", "")
+
+        try:
+            customer_count = int(customer_text)
+
+            if customer_count <= 0:
+                reply = "❌ จำนวนลูกค้าต้องมากกว่า 0 คน"
+            else:
+                date_text, time_text = record_customer(customer_count)
+
+                reply = (
+                    "✅ บันทึกจำนวนลูกค้าเรียบร้อย\n\n"
+                    f"📅 วันที่: {date_text}\n"
+                    f"⏰ เวลา: {time_text}\n"
+                    f"👥 จำนวนลูกค้า: {customer_count} คน"
+                )
+
+        except ValueError:
+            reply = (
+                "❌ รูปแบบจำนวนลูกค้าไม่ถูกต้อง\n\n"
+                "กรุณาพิมพ์เป็นจำนวนเต็ม เช่น:\n"
+                "ลูกค้า 5"
+            )
+
+        except Exception:
+            reply = (
+                "⚠️ ระบบยังบันทึกจำนวนลูกค้าไม่ได้ในขณะนี้\n\n"
+                "กรุณาลองใหม่อีกครั้ง"
+            )
+            
     elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
         try:
             report = get_daily_sales_report()
@@ -136,7 +176,9 @@ def handle_text_message(event, line_bot_api):
             average_sales = report["average_sales"]
             latest_sales = report["latest_sales"]
             latest_expenses = report["latest_expenses"]
-
+            total_customers = report["total_customers"]
+            average_sales_per_customer = report["average_sales_per_customer"]
+            latest_customers = report["latest_customers"]
             latest_sales_text = ""
 
             for item in latest_sales:
@@ -160,6 +202,9 @@ def handle_text_message(event, line_bot_api):
                 f"💰 ยอดขายรวม: {total_sales:,.2f} บาท\n"
                 f"💸 ค่าใช้จ่ายรวม: {total_expenses:,.2f} บาท\n"
                 f"✅ กำไรคงเหลือ: {profit:,.2f} บาท\n"
+                f"👥 จำนวนลูกค้า: {total_customers} คน\n"
+                f"🛒 ยอดขายเฉลี่ยต่อลูกค้า: "
+                f"{average_sales_per_customer:,.2f} บาท\n"
                 f"🧾 จำนวนรายการขาย: {transaction_count} รายการ\n"
                 f"📈 ยอดขายเฉลี่ย: {average_sales:,.2f} บาท"
             )
@@ -188,6 +233,7 @@ def handle_text_message(event, line_bot_api):
             "• เมนู\n"
             "• ยอดขาย 2500\n"
             "• ค่าใช้จ่าย 350 ค่านม\n"
+            "• ลูกค้า 5\n"
             "• รายงาน\n"
             "• ช่วยเหลือ"
         )
