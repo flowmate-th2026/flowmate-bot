@@ -1,6 +1,6 @@
 from linebot.models import TextSendMessage
 
-from services import record_sale
+from services import get_daily_sales_report, record_sale
 
 def handle_text_message(event, line_bot_api):
     user_message = event.message.text.strip()
@@ -64,12 +64,48 @@ def handle_text_message(event, line_bot_api):
                 "กรุณาลองใหม่อีกครั้ง"
             )
 
-    elif normalized_message == "รายงาน":
-        reply = (
-            "📊 ระบบรายงานร้านค้า\n\n"
-            "ขณะนี้ยังไม่มีข้อมูลยอดขายที่บันทึกถาวร\n"
-            "ขั้นต่อไปเราจะเชื่อม Google Sheets ค่ะ"
-        )
+    elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
+        try:
+            report = get_daily_sales_report()
+
+            total_sales = report["total_sales"]
+            transaction_count = report["transaction_count"]
+            average_sales = report["average_sales"]
+            latest_sales = report["latest_sales"]
+
+            if transaction_count == 0:
+                reply = (
+                    "📊 รายงานยอดขายวันนี้\n"
+                    f"📅 {report['date']}\n\n"
+                    "วันนี้ยังไม่มียอดขายที่บันทึกไว้ค่ะ\n\n"
+                    "พิมพ์ตัวอย่าง:\n"
+                    "ยอดขาย 500"
+                )
+
+            else:
+                latest_text = ""
+
+                for item in latest_sales:
+                    latest_text += (
+                        f"• {item['time']} — "
+                        f"{item['amount']:,.2f} บาท\n"
+                    )
+
+                reply = (
+                    "📊 รายงานยอดขายวันนี้\n"
+                    f"📅 {report['date']}\n\n"
+                    f"💰 ยอดขายรวม: {total_sales:,.2f} บาท\n"
+                    f"🧾 จำนวนรายการ: {transaction_count} รายการ\n"
+                    f"📈 ยอดขายเฉลี่ย: {average_sales:,.2f} บาท\n\n"
+                    "🕒 รายการล่าสุด\n"
+                    f"{latest_text}"
+                )
+
+        except Exception:
+            reply = (
+                "⚠️ ระบบยังเปิดรายงานไม่ได้ในขณะนี้\n\n"
+                "กรุณาลองใหม่อีกครั้ง"
+            )
 
     elif normalized_message == "ช่วยเหลือ":
         reply = (
