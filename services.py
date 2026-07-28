@@ -63,6 +63,7 @@ def get_daily_sales_report():
 
     sales_rows = get_sales_rows_by_date(date_text)
     expense_rows = get_expense_rows_by_date(date_text)
+    customer_rows = get_customer_rows_by_date(date_text)
 
     valid_sales = []
 
@@ -103,6 +104,27 @@ def get_daily_sales_report():
             }
         )
 
+    valid_customers = []
+
+    for row in customer_rows:
+        customer_text = str(row.get("จำนวนเงิน", "0"))
+        customer_text = customer_text.replace(",", "").strip()
+
+        try:
+            customer_count = int(float(customer_text))
+        except ValueError:
+            continue
+
+        if customer_count <= 0:
+            continue
+
+        valid_customers.append(
+            {
+                "time": str(row.get("เวลา", "")).strip(),
+                "customer_count": customer_count,
+            }
+        )
+
     total_sales = sum(
         item["amount"] for item in valid_sales
     )
@@ -111,8 +133,11 @@ def get_daily_sales_report():
         item["amount"] for item in valid_expenses
     )
 
-    profit = total_sales - total_expenses
+    total_customers = sum(
+        item["customer_count"] for item in valid_customers
+    )
 
+    profit = total_sales - total_expenses
     transaction_count = len(valid_sales)
 
     if transaction_count > 0:
@@ -120,8 +145,14 @@ def get_daily_sales_report():
     else:
         average_sales = 0
 
+    if total_customers > 0:
+        average_sales_per_customer = total_sales / total_customers
+    else:
+        average_sales_per_customer = 0
+
     latest_sales = list(reversed(valid_sales[-3:]))
     latest_expenses = list(reversed(valid_expenses[-3:]))
+    latest_customers = list(reversed(valid_customers[-3:]))
 
     return {
         "date": date_text,
@@ -130,6 +161,9 @@ def get_daily_sales_report():
         "profit": profit,
         "transaction_count": transaction_count,
         "average_sales": average_sales,
+        "total_customers": total_customers,
+        "average_sales_per_customer": average_sales_per_customer,
         "latest_sales": latest_sales,
         "latest_expenses": latest_expenses,
+        "latest_customers": latest_customers,
     }
