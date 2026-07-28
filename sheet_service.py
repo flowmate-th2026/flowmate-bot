@@ -23,6 +23,22 @@ def append_sale_row(date_text, time_text, amount):
             time_text,
             "ยอดขาย",
             amount,
+            "",
+        ],
+        value_input_option="USER_ENTERED",
+    )
+
+
+def append_expense_row(date_text, time_text, amount, description):
+    worksheet = get_sales_worksheet()
+
+    worksheet.append_row(
+        [
+            date_text,
+            time_text,
+            "ค่าใช้จ่าย",
+            amount,
+            description,
         ],
         value_input_option="USER_ENTERED",
     )
@@ -42,3 +58,19 @@ def get_sales_rows_by_date(date_text):
             sales_rows.append(row)
 
     return sales_rows
+
+
+def get_expense_rows_by_date(date_text):
+    worksheet = get_sales_worksheet()
+    records = worksheet.get_all_records()
+
+    expense_rows = []
+
+    for row in records:
+        row_date = str(row.get("วันที่", "")).strip()
+        row_type = str(row.get("ประเภท", "")).strip()
+
+        if row_date == date_text and row_type == "ค่าใช้จ่าย":
+            expense_rows.append(row)
+
+    return expense_rows
