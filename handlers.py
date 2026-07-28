@@ -1,8 +1,6 @@
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
 from linebot.models import TextSendMessage
 
+from services import record_sale
 
 def handle_text_message(event, line_bot_api):
     user_message = event.message.text.strip()
@@ -39,7 +37,7 @@ def handle_text_message(event, line_bot_api):
             if amount <= 0:
                 reply = "❌ ยอดขายต้องมากกว่า 0 บาท"
             else:
-                thailand_time = datetime.now(ZoneInfo("Asia/Bangkok"))
+                date_text, time_text = record_sale(amount)
 
                 if amount.is_integer():
                     formatted_amount = f"{amount:,.0f}"
@@ -47,9 +45,9 @@ def handle_text_message(event, line_bot_api):
                     formatted_amount = f"{amount:,.2f}"
 
                 reply = (
-                    "✅ บันทึกยอดขายเรียบร้อย\n\n"
-                    f"📅 วันที่: {thailand_time.strftime('%d/%m/%Y')}\n"
-                    f"⏰ เวลา: {thailand_time.strftime('%H:%M')}\n"
+                    "✅ บันทึกยอดขายลง Google Sheets เรียบร้อย\n\n"
+                    f"📅 วันที่: {date_text}\n"
+                    f"⏰ เวลา: {time_text}\n"
                     f"💰 ยอดขาย: {formatted_amount} บาท"
                 )
 
@@ -58,6 +56,12 @@ def handle_text_message(event, line_bot_api):
                 "❌ รูปแบบยอดขายไม่ถูกต้อง\n\n"
                 "กรุณาพิมพ์ตัวเลข เช่น:\n"
                 "ยอดขาย 2500"
+            )
+
+        except Exception:
+            reply = (
+                "⚠️ ระบบยังบันทึกยอดขายไม่ได้ในขณะนี้\n\n"
+                "กรุณาลองใหม่อีกครั้ง"
             )
 
     elif normalized_message == "รายงาน":
