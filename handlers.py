@@ -196,17 +196,32 @@ def handle_text_message(event, line_bot_api):
                     f"({item['description']})\n"
                 )
 
+            if profit >= 0:
+                profit_text = (
+                    "💵 กำไรสุทธิ\n"
+                    f"{profit:,.2f} บาท"
+                )
+            else:
+                profit_text = (
+                    "🔻 ขาดทุนสุทธิ\n"
+                    f"{abs(profit):,.2f} บาท"
+                )
+
             reply = (
-                "📊 รายงานร้านค้าวันนี้\n"
+                "📊 สรุปร้านค้าประจำวัน\n"
                 f"📅 {report['date']}\n\n"
-                f"💰 ยอดขายรวม: {total_sales:,.2f} บาท\n"
-                f"💸 ค่าใช้จ่ายรวม: {total_expenses:,.2f} บาท\n"
-                f"✅ กำไรคงเหลือ: {profit:,.2f} บาท\n"
-                f"👥 จำนวนลูกค้า: {total_customers} คน\n"
-                f"🛒 ยอดขายเฉลี่ยต่อลูกค้า: "
+                "──────────────\n\n"
+                "💰 ยอดขาย\n"
+                f"{total_sales:,.2f} บาท\n\n"
+                "💸 ค่าใช้จ่าย\n"
+                f"{total_expenses:,.2f} บาท\n\n"
+                f"{profit_text}\n\n"
+                "──────────────\n\n"
+                f"👥 ลูกค้าทั้งหมด: {total_customers} คน\n"
+                f"🧾 รายการขาย: {transaction_count} รายการ\n"
+                f"🛒 ยอดเฉลี่ยต่อลูกค้า: "
                 f"{average_sales_per_customer:,.2f} บาท\n"
-                f"🧾 จำนวนรายการขาย: {transaction_count} รายการ\n"
-                f"📈 ยอดขายเฉลี่ย: {average_sales:,.2f} บาท"
+                f"📈 ยอดเฉลี่ยต่อรายการ: {average_sales:,.2f} บาท"
             )
 
             if latest_sales_text:
