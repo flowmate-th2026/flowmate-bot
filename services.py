@@ -1,8 +1,12 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from sheet_service import append_sale_row, get_sales_rows_by_date
-
+from sheet_service import (
+    append_sale_row,
+    append_expense_row,
+    get_sales_rows_by_date,
+    get_expense_rows_by_date,
+)
 
 def get_thailand_time():
     return datetime.now(ZoneInfo("Asia/Bangkok"))
