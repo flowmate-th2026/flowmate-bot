@@ -1,6 +1,6 @@
 from linebot.models import TextSendMessage
 
-from services import get_daily_sales_report, record_sale
+from services import record_sale, get_daily_sales_report
 
 def handle_text_message(event, line_bot_api):
     user_message = event.message.text.strip()
