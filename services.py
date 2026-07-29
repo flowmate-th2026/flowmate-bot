@@ -74,3 +74,35 @@ def record_product(product_name, quantity, amount):
 
     return date_text, time_text
 
+def get_daily_sales():
+    today = get_thailand_time().strftime("%d/%m/%Y")
+    rows = get_sales_rows_by_date(today)
+
+    total = 0
+
+    for row in rows:
+        total += float(row.get("จำนวนเงิน", 0))
+
+    return total
+
+def get_daily_expense():
+    today = get_thailand_time().strftime("%d/%m/%Y")
+    rows = get_expense_rows_by_date(today)
+
+    total = 0
+
+    for row in rows:
+        total += float(row.get("จำนวนเงิน", 0))
+
+    return total
+
+def get_daily_expense():
+    today = get_thailand_time().strftime("%d/%m/%Y")
+    rows = get_expense_rows_by_date(today)
+
+    total = 0
+
+    for row in rows:
+        total += float(row.get("จำนวนเงิน", 0))
+
+    return total
