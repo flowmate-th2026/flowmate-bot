@@ -1,15 +1,7 @@
 from linebot.models import FlexSendMessage
 
 
-def create_report_flex(
-    sales,
-    expense,
-    customer,
-    profit,
-):
-    """
-    Flex Message รายงานประจำวัน
-    """
+def create_report_flex(sales, expense, customer, profit):
 
     def money(value):
         return f"{float(value):,.2f}"
@@ -17,6 +9,7 @@ def create_report_flex(
     flex_contents = {
         "type": "bubble",
         "size": "mega",
+
         "styles": {
             "header": {
                 "backgroundColor": "#EAF4FF"
@@ -28,12 +21,12 @@ def create_report_flex(
                 "backgroundColor": "#FFFFFF"
             }
         },
-    "header": {
+
+        "header": {
             "type": "box",
             "layout": "vertical",
             "paddingAll": "20px",
             "contents": [
-
                 {
                     "type": "text",
                     "text": "📊 รายงานวันนี้",
@@ -41,19 +34,16 @@ def create_report_flex(
                     "size": "xl",
                     "color": "#1E3A8A"
                 },
-
                 {
                     "type": "text",
                     "text": "สรุปยอดขายและกำไรของร้าน",
                     "size": "sm",
                     "color": "#666666",
-                    "margin": "md",
-                    "wrap": True
+                    "margin": "md"
                 }
-
             ]
         },
-            ,
+
         "body": {
             "type": "box",
             "layout": "vertical",
@@ -67,14 +57,12 @@ def create_report_flex(
                         {
                             "type": "text",
                             "text": "💰 ยอดขาย",
-                            "size": "md",
                             "weight": "bold"
                         },
                         {
                             "type": "text",
                             "text": f"฿{money(sales)}",
                             "align": "end",
-                            "size": "lg",
                             "weight": "bold",
                             "color": "#1677FF"
                         }
@@ -93,14 +81,12 @@ def create_report_flex(
                     "contents": [
                         {
                             "type": "text",
-                            "text": "💸 ค่าใช้จ่าย",
-                            "size": "md"
+                            "text": "💸 ค่าใช้จ่าย"
                         },
                         {
                             "type": "text",
                             "text": f"฿{money(expense)}",
                             "align": "end",
-                            "size": "md",
                             "color": "#D9368B"
                         }
                     ]
@@ -113,14 +99,12 @@ def create_report_flex(
                     "contents": [
                         {
                             "type": "text",
-                            "text": "👥 ลูกค้า",
-                            "size": "md"
+                            "text": "👥 ลูกค้า"
                         },
                         {
                             "type": "text",
                             "text": str(customer),
-                            "align": "end",
-                            "size": "md"
+                            "align": "end"
                         }
                     ]
                 },
@@ -138,8 +122,7 @@ def create_report_flex(
                         {
                             "type": "text",
                             "text": "📈 กำไร",
-                            "weight": "bold",
-                            "size": "lg"
+                            "weight": "bold"
                         },
                         {
                             "type": "text",
@@ -154,134 +137,62 @@ def create_report_flex(
 
             ]
         },
-{
-    "type": "separator",
-    "margin": "lg"
-},
 
-{
-    "type": "box",
-    "layout": "horizontal",
-    "margin": "lg",
-    "contents": [
-        {
-            "type": "text",
-            "text": "💸 ค่าใช้จ่าย",
-            "size": "md"
-        },
-        {
-            "type": "text",
-            "text": f"฿{money(expense)}",
-            "align": "end",
-            "size": "md",
-            "color": "#D9368B"
-        }
-    ]
-},
+        "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "paddingAll": "16px",
+            "contents": [
 
-{
-    "type": "box",
-    "layout": "horizontal",
-    "margin": "md",
-    "contents": [
-        {
-            "type": "text",
-            "text": "👥 ลูกค้า",
-            "size": "md"
-        },
-        {
-            "type": "text",
-            "text": str(customer),
-            "align": "end",
-            "size": "md"
-        }
-    ]
-},
+                {
+                    "type": "button",
+                    "style": "primary",
+                    "color": "#1677FF",
+                    "action": {
+                        "type": "message",
+                        "label": "📅 รายงานสัปดาห์",
+                        "text": "รายงานสัปดาห์"
+                    }
+                },
 
-{
-    "type": "separator",
-    "margin": "lg"
-},
+                {
+                    "type": "button",
+                    "style": "primary",
+                    "margin": "sm",
+                    "color": "#00AA55",
+                    "action": {
+                        "type": "message",
+                        "label": "📆 รายงานเดือน",
+                        "text": "รายงานเดือน"
+                    }
+                },
 
-{
-    "type": "box",
-    "layout": "horizontal",
-    "margin": "lg",
-    "contents": [
-        {
-            "type": "text",
-            "text": "📈 กำไร",
-            "weight": "bold",
-            "size": "lg"
-        },
-        {
-            "type": "text",
-            "text": f"฿{money(profit)}",
-            "align": "end",
-            "weight": "bold",
-            "size": "xl",
-            "color": "#00AA55"
-        }
-    ]
-}
-},
-"footer": {
-    "type": "box",
-    "layout": "vertical",
-    "paddingAll": "16px",
-    "contents": [
+                {
+                    "type": "button",
+                    "style": "secondary",
+                    "margin": "sm",
+                    "action": {
+                        "type": "message",
+                        "label": "🏠 กลับเมนู",
+                        "text": "เมนู"
+                    }
+                },
 
-        {
-            "type": "button",
-            "style": "primary",
-            "height": "sm",
-            "color": "#1677FF",
-            "action": {
-                "type": "message",
-                "label": "📅 รายงานสัปดาห์",
-                "text": "รายงานสัปดาห์"
-            }
-        },
+                {
+                    "type": "text",
+                    "text": "FlowMate • Smart Business Assistant",
+                    "size": "xs",
+                    "color": "#999999",
+                    "align": "center",
+                    "margin": "lg"
+                }
 
-        {
-            "type": "button",
-            "style": "primary",
-            "height": "sm",
-            "margin": "sm",
-            "color": "#00AA55",
-            "action": {
-                "type": "message",
-                "label": "📆 รายงานเดือน",
-                "text": "รายงานเดือน"
-            }
-        },
-
-        {
-            "type": "button",
-            "style": "secondary",
-            "height": "sm",
-            "margin": "sm",
-            "action": {
-                "type": "message",
-                "label": "🏠 กลับเมนู",
-                "text": "เมนู"
-            }
-        },
-
-        {
-            "type": "text",
-            "text": "FlowMate • Smart Business Assistant",
-            "size": "xs",
-            "color": "#999999",
-            "align": "center",
-            "margin": "lg"
+            ]
         }
 
-    ]
-}
-}
+    }
 
-return FlexSendMessage(
-    alt_text="รายงานประจำวัน",
-    contents=flex_contents
-)
+    return FlexSendMessage(
+        alt_text="รายงานประจำวัน",
+        contents=flex_contents
+    )
