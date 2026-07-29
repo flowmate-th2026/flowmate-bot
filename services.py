@@ -5,6 +5,7 @@ from sheet_service import (
     append_sale_row,
     append_expense_row,
     append_customer_row,
+    append_product_row,
     get_sales_rows_by_date,
     get_expense_rows_by_date,
     get_customer_rows_by_date,
@@ -56,7 +57,23 @@ def record_customer(customer_count):
     )
 
     return date_text, time_text
-    
+
+def record_product(product_name, quantity, amount):
+    thailand_time = get_thailand_time()
+
+    date_text = thailand_time.strftime("%d/%m/%Y")
+    time_text = thailand_time.strftime("%H:%M")
+
+    append_product_row(
+        date_text=date_text,
+        time_text=time_text,
+        product_name=product_name,
+        quantity=quantity,
+        amount=amount,
+    )
+
+    return date_text, time_text
+
 def get_daily_sales_report():
     thailand_time = get_thailand_time()
     date_text = thailand_time.strftime("%d/%m/%Y")
