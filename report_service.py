@@ -8,6 +8,7 @@ from sheet_service import (
     get_product_rows_by_date,
 )
 
+
 def get_thailand_time():
     """
     คืนค่าวันและเวลาปัจจุบันตามประเทศไทย
@@ -18,7 +19,8 @@ def get_thailand_time():
 def get_daily_sales_report():
     """
     อ่านข้อมูลประจำวันจาก Google Sheets
-    และคำนวณรายงานยอดขาย ค่าใช้จ่าย กำไร และลูกค้า
+    และคำนวณรายงานยอดขาย ค่าใช้จ่าย กำไร ลูกค้า
+    และสินค้าขายดี
     """
 
     thailand_time = get_thailand_time()
@@ -27,7 +29,7 @@ def get_daily_sales_report():
     sales_rows = get_sales_rows_by_date(date_text)
     expense_rows = get_expense_rows_by_date(date_text)
     customer_rows = get_customer_rows_by_date(date_text)
-    product_row = get_product_rows_by_date(date_text)
+    product_rows = get_product_rows_by_date(date_text)
 
     valid_sales = []
 
@@ -125,7 +127,7 @@ def get_daily_sales_report():
                 "amount": amount,
             }
         )
-    
+
     total_sales = sum(
         item["amount"] for item in valid_sales
     )
@@ -137,8 +139,8 @@ def get_daily_sales_report():
     total_customers = sum(
         item["customer_count"] for item in valid_customers
     )
-    
-     total_product_quantity = sum(
+
+    total_product_quantity = sum(
         item["quantity"] for item in valid_products
     )
 
