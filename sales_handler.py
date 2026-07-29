@@ -36,8 +36,8 @@ def handle_sales_message(user_message):
 
         return create_success_flex(
             record_type="ยอดขาย",
-            amount=formatted_amount,
-            description="ยอดขายรวม",
+            amount=amount,
+            description=f"ยอดขาย {formatted_amount} บาท",
             date_text=date_text,
             time_text=time_text,
             category="ยอดขาย",
