@@ -1,5 +1,6 @@
 from linebot.models import FlexSendMessage
 
+
 def create_sales_flex_message():
     return FlexSendMessage(
         alt_text="เมนูยอดขาย FlowMate",
@@ -37,6 +38,7 @@ def create_sales_flex_message():
                     {
                         "type": "button",
                         "style": "primary",
+                        "height": "sm",
                         "color": "#F59E0B",
                         "action": {
                             "type": "message",
@@ -47,6 +49,7 @@ def create_sales_flex_message():
                     {
                         "type": "button",
                         "style": "secondary",
+                        "height": "sm",
                         "action": {
                             "type": "message",
                             "label": "บันทึกสินค้าที่ขาย",
@@ -56,6 +59,7 @@ def create_sales_flex_message():
                     {
                         "type": "button",
                         "style": "secondary",
+                        "height": "sm",
                         "action": {
                             "type": "message",
                             "label": "ดูยอดขายวันนี้",
@@ -64,8 +68,24 @@ def create_sales_flex_message():
                     },
                 ],
             },
+            "footer": {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "14px",
+                "backgroundColor": "#FFF9EF",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "FlowMate • ผู้ช่วยจัดการร้านค้า",
+                        "align": "center",
+                        "size": "xs",
+                        "color": "#9A7B5B",
+                    }
+                ],
+            },
         },
     )
+
 
 def handle_menu_message(normalized_message):
     """
@@ -78,7 +98,7 @@ def handle_menu_message(normalized_message):
             "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งทั้งหมด"
         )
 
-        if normalized_message == "ยอดขาย":
+    if normalized_message == "ยอดขาย":
         return create_sales_flex_message()
 
     if normalized_message == "กรอกยอดขายรวม":
@@ -91,12 +111,12 @@ def handle_menu_message(normalized_message):
 
     if normalized_message == "กรอกสินค้าที่ขาย":
         return (
-            "🛍 กรุณาพิมพ์สินค้าที่ขายตามรูปแบบนี้\n\n"
+            "🛍️ กรุณาพิมพ์สินค้าที่ขายตามรูปแบบนี้\n\n"
             "ขาย ชื่อสินค้า จำนวน ยอดขายรวม\n\n"
             "ตัวอย่าง:\n"
             "ขาย มัทฉะลาเต้ 2 110"
         )
-    
+
     if normalized_message in ["เมนู", "menu"]:
         return (
             "🤖 เมนู FlowMate\n\n"
