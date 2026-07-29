@@ -3,6 +3,10 @@ from linebot.models import TextSendMessage
 from customer_handler import handle_customer_message
 from expense_handler import handle_expense_message
 from menu_handler import handle_menu_message
+from period_report_handler import (
+    handle_monthly_report_message,
+    handle_weekly_report_message,
+)
 from product_handler import handle_product_message
 from report_handler import handle_report_message
 from sales_handler import handle_sales_message
@@ -56,6 +60,24 @@ def handle_text_message(event, line_bot_api):
             or normalized_message.startswith("ลูกค้า ")
         ):
             reply = handle_customer_message(user_message)
+
+        # รายงานประจำสัปดาห์
+        elif normalized_message in [
+            "รายงานสัปดาห์",
+            "สรุปสัปดาห์",
+        ]:
+            reply = handle_weekly_report_message()
+
+        # รายงานประจำเดือน
+        elif normalized_message in [
+            "รายงานเดือน",
+            "สรุปเดือน",
+        ]:
+            reply = handle_monthly_report_message()
+
+        # รายงานประจำวัน
+        elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
+            reply = handle_report_message()
 
         # เปิดรายงาน
         elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
