@@ -1,5 +1,5 @@
 from services import record_expense
-
+from success_flex import create_success_flex
 
 def handle_expense_message(user_message):
     """
@@ -44,12 +44,13 @@ def handle_expense_message(user_message):
         else:
             formatted_amount = f"{amount:,.2f}"
 
-        return (
-            "✅ บันทึกค่าใช้จ่ายเรียบร้อย\n\n"
-            f"📅 วันที่: {date_text}\n"
-            f"⏰ เวลา: {time_text}\n"
-            f"💸 ค่าใช้จ่าย: {formatted_amount} บาท\n"
-            f"📝 รายละเอียด: {description}"
+        return create_success_flex(
+            record_type="ค่าใช้จ่าย",
+            amount=amount,
+            description=description,
+            date_text=date_text,
+            time_text=time_text,
+            category="ค่าใช้จ่าย",
         )
 
     except ValueError:
