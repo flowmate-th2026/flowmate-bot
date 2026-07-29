@@ -5,8 +5,8 @@ from sheet_service import (
     get_sales_rows_by_date,
     get_expense_rows_by_date,
     get_customer_rows_by_date,
+    get_product_rows_by_date,
 )
-
 
 def get_thailand_time():
     """
@@ -27,6 +27,7 @@ def get_daily_sales_report():
     sales_rows = get_sales_rows_by_date(date_text)
     expense_rows = get_expense_rows_by_date(date_text)
     customer_rows = get_customer_rows_by_date(date_text)
+    product_row = get_product_rows_by_date(date_text)
 
     valid_sales = []
 
@@ -88,6 +89,43 @@ def get_daily_sales_report():
             }
         )
 
+    valid_products = []
+
+    for row in product_rows:
+        product_name = str(
+            row.get("ชื่อสินค้า", "")
+        ).strip()
+
+        quantity_text = str(
+            row.get("จำนวนขาย", "0")
+        )
+        quantity_text = quantity_text.replace(",", "").strip()
+
+        amount_text = str(
+            row.get("จำนวนเงิน", "0")
+        )
+        amount_text = amount_text.replace(",", "").strip()
+
+        try:
+            quantity = int(float(quantity_text))
+            amount = float(amount_text)
+        except (ValueError, TypeError):
+            continue
+
+        if not product_name:
+            continue
+
+        if quantity <= 0 or amount <= 0:
+            continue
+
+        valid_products.append(
+            {
+                "product_name": product_name,
+                "quantity": quantity,
+                "amount": amount,
+            }
+        )
+    
     total_sales = sum(
         item["amount"] for item in valid_sales
     )
@@ -99,6 +137,40 @@ def get_daily_sales_report():
     total_customers = sum(
         item["customer_count"] for item in valid_customers
     )
+    
+     total_product_quantity = sum(
+        item["quantity"] for item in valid_products
+    )
+
+    product_summary = {}
+
+    for item in valid_products:
+        product_name = item["product_name"]
+        normalized_product_name = product_name.lower()
+
+        if normalized_product_name not in product_summary:
+            product_summary[normalized_product_name] = {
+                "product_name": product_name,
+                "quantity": 0,
+                "amount": 0,
+            }
+
+        product_summary[normalized_product_name]["quantity"] += (
+            item["quantity"]
+        )
+
+        product_summary[normalized_product_name]["amount"] += (
+            item["amount"]
+        )
+
+    top_products = sorted(
+        product_summary.values(),
+        key=lambda item: (
+            item["quantity"],
+            item["amount"],
+        ),
+        reverse=True,
+    )[:3]
 
     profit = total_sales - total_expenses
     transaction_count = len(valid_sales)
@@ -139,4 +211,7 @@ def get_daily_sales_report():
         "latest_sales": latest_sales,
         "latest_expenses": latest_expenses,
         "latest_customers": latest_customers,
+        "total_product_quantity": total_product_quantity,
+        "product_transaction_count": len(valid_products),
+        "top_products": top_products,
     }
