@@ -27,7 +27,7 @@ def create_report_flex(
             "footer": {
                 "backgroundColor": "#FFFFFF"
             }
-        }
+        },
     "header": {
             "type": "box",
             "layout": "vertical",
@@ -224,7 +224,6 @@ def create_report_flex(
         }
     ]
 }
-]
 },
 "footer": {
     "type": "box",
