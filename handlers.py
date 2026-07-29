@@ -21,7 +21,7 @@ def handle_text_message(event, line_bot_api):
     normalized_message = user_message.lower()
 
     try:
-        # เมนู คำทักทาย และช่วยเหลือ
+        # เมนู คำทักทาย วิธีใช้งาน และปุ่มในการ์ดยอดขาย
         if normalized_message in [
             "สวัสดี",
             "หวัดดี",
@@ -30,17 +30,19 @@ def handle_text_message(event, line_bot_api):
             "เมนู",
             "menu",
             "ช่วยเหลือ",
+            "ยอดขาย",
+            "กรอกยอดขายรวม",
+            "บันทึกยอดขายรวม",
+            "กรอกสินค้าที่ขาย",
+            "บันทึกสินค้าที่ขาย",
         ]:
             reply = handle_menu_message(normalized_message)
 
-        # บันทึกยอดขาย
-        elif (
-            normalized_message == "ยอดขาย"
-            or normalized_message.startswith("ยอดขาย ")
-        ):
+        # บันทึกยอดขาย เช่น ยอดขาย 2500
+        elif normalized_message.startswith("ยอดขาย "):
             reply = handle_sales_message(user_message)
 
-         # บันทึกสินค้าที่ขาย
+        # บันทึกสินค้าที่ขาย เช่น ขาย มัทฉะลาเต้ 2 110
         elif (
             normalized_message == "ขาย"
             or normalized_message.startswith("ขาย ")
@@ -76,11 +78,10 @@ def handle_text_message(event, line_bot_api):
             reply = handle_monthly_report_message()
 
         # รายงานประจำวัน
-        elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
-            reply = handle_report_message()
-
-        # เปิดรายงาน
-        elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
+        elif normalized_message in [
+            "รายงาน",
+            "สรุปวันนี้",
+        ]:
             reply = handle_report_message()
 
         # ไม่พบคำสั่ง
@@ -98,7 +99,15 @@ def handle_text_message(event, line_bot_api):
             "กรุณาลองใหม่อีกครั้ง"
         )
 
+    # ถ้าเป็นข้อความธรรมดา ให้สร้าง TextSendMessage
+    if isinstance(reply, str):
+        response_message = TextSendMessage(text=reply)
+
+    # ถ้าเป็น FlexSendMessage ให้ส่งได้โดยตรง
+    else:
+        response_message = reply
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=reply),
+        response_message,
     )
