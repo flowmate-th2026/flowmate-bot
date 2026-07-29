@@ -1,5 +1,5 @@
 from services import record_sale
-
+from success_flex import create_success_flex
 
 def handle_sales_message(user_message):
     """
@@ -34,11 +34,13 @@ def handle_sales_message(user_message):
         else:
             formatted_amount = f"{amount:,.2f}"
 
-        return (
-            "✅ บันทึกยอดขายลง Google Sheets เรียบร้อย\n\n"
-            f"📅 วันที่: {date_text}\n"
-            f"⏰ เวลา: {time_text}\n"
-            f"💰 ยอดขาย: {formatted_amount} บาท"
+        return create_success_flex(
+            record_type="ยอดขาย",
+            amount=formatted_amount,
+            description="ยอดขายรวม",
+            date_text=date_text,
+            time_text=time_text,
+            category="ยอดขาย",
         )
 
     except ValueError:
