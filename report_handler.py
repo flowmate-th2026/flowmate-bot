@@ -59,7 +59,7 @@ def handle_report_message():
                 f"{abs(profit):,.2f} บาท"
             )
 
-         reply = (
+        reply = (
             "📊 สรุปร้านค้าประจำวัน\n"
             f"📅 {report['date']}\n\n"
             "──────────────\n\n"
