@@ -1,3 +1,4 @@
+import traceback
 from report_service import get_daily_sales_report
 
 
@@ -108,7 +109,11 @@ def handle_report_message():
         return reply
 
     except Exception as error:
-        print(f"เกิดข้อผิดพลาดใน report_handler.py: {error}")
+        print(
+            f"เกิดข้อผิดพลาดใน report_handler.py: {error}",
+            flush=True,
+        )
+        traceback.print_exc()
 
         return (
             "⚠️ ระบบยังเปิดรายงานไม่ได้ในขณะนี้\n\n"
