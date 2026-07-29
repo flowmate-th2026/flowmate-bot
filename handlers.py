@@ -3,6 +3,7 @@ from linebot.models import TextSendMessage
 from customer_handler import handle_customer_message
 from expense_handler import handle_expense_message
 from menu_handler import handle_menu_message
+from product_handler import handle_product_message
 from report_handler import handle_report_message
 from sales_handler import handle_sales_message
 
@@ -34,6 +35,13 @@ def handle_text_message(event, line_bot_api):
             or normalized_message.startswith("ยอดขาย ")
         ):
             reply = handle_sales_message(user_message)
+
+         # บันทึกสินค้าที่ขาย
+        elif (
+            normalized_message == "ขาย"
+            or normalized_message.startswith("ขาย ")
+        ):
+            reply = handle_product_message(user_message)
 
         # บันทึกค่าใช้จ่าย
         elif (
