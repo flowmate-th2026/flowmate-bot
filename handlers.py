@@ -1,265 +1,74 @@
 from linebot.models import TextSendMessage
 
-from services import (
-    record_sale,
-    record_expense,
-    record_customer,
-    get_daily_sales_report,
-)
+from customer_handler import handle_customer_message
+from expense_handler import handle_expense_message
+from menu_handler import handle_menu_message
+from report_handler import handle_report_message
+from sales_handler import handle_sales_message
+
 
 def handle_text_message(event, line_bot_api):
+    """
+    รับข้อความจาก LINE แล้วส่งต่อไปยัง handler ที่เกี่ยวข้อง
+    """
+
     user_message = event.message.text.strip()
     normalized_message = user_message.lower()
 
-    if normalized_message in ["สวัสดี", "หวัดดี", "hello", "hi"]:
-        reply = (
-            "👋 สวัสดีค่ะ ยินดีต้อนรับสู่ FlowMate\n\n"
-            "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งทั้งหมด"
-        )
+    try:
+        # เมนู คำทักทาย และช่วยเหลือ
+        if normalized_message in [
+            "สวัสดี",
+            "หวัดดี",
+            "hello",
+            "hi",
+            "เมนู",
+            "menu",
+            "ช่วยเหลือ",
+        ]:
+            reply = handle_menu_message(normalized_message)
 
-    elif normalized_message in ["เมนู", "menu"]:
-        reply = (
-            "🤖 เมนู FlowMate\n\n"
-            "1️⃣ พิมพ์ “ยอดขาย 2500” เพื่อบันทึกยอดขาย\n"
-            "2️⃣ พิมพ์ “ค่าใช้จ่าย 350 ค่านม” เพื่อบันทึกค่าใช้จ่าย\n"
-            "3️⃣ พิมพ์ “ลูกค้า 5” เพื่อบันทึกจำนวนลูกค้า\n"
-            "4️⃣ พิมพ์ “รายงาน” เพื่อดูรายงานร้านค้า\n"
-            "5️⃣ พิมพ์ “ช่วยเหลือ” เพื่อดูวิธีใช้งาน"
-        )
+        # บันทึกยอดขาย
+        elif (
+            normalized_message == "ยอดขาย"
+            or normalized_message.startswith("ยอดขาย ")
+        ):
+            reply = handle_sales_message(user_message)
 
-    elif normalized_message == "ยอดขาย":
-        reply = (
-            "💰 กรุณาใส่จำนวนเงินต่อท้ายคำว่ายอดขาย\n\n"
-            "ตัวอย่าง:\n"
-            "ยอดขาย 2500"
-        )
+        # บันทึกค่าใช้จ่าย
+        elif (
+            normalized_message == "ค่าใช้จ่าย"
+            or normalized_message.startswith("ค่าใช้จ่าย ")
+        ):
+            reply = handle_expense_message(user_message)
 
-    elif normalized_message.startswith("ยอดขาย "):
-        amount_text = user_message.replace("ยอดขาย", "", 1).strip()
-        amount_text = amount_text.replace(",", "")
+        # บันทึกจำนวนลูกค้า
+        elif (
+            normalized_message == "ลูกค้า"
+            or normalized_message.startswith("ลูกค้า ")
+        ):
+            reply = handle_customer_message(user_message)
 
-        try:
-            amount = float(amount_text)
+        # เปิดรายงาน
+        elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
+            reply = handle_report_message()
 
-            if amount <= 0:
-                reply = "❌ ยอดขายต้องมากกว่า 0 บาท"
-            else:
-                date_text, time_text = record_sale(amount)
-
-                if amount.is_integer():
-                    formatted_amount = f"{amount:,.0f}"
-                else:
-                    formatted_amount = f"{amount:,.2f}"
-
-                reply = (
-                    "✅ บันทึกยอดขายลง Google Sheets เรียบร้อย\n\n"
-                    f"📅 วันที่: {date_text}\n"
-                    f"⏰ เวลา: {time_text}\n"
-                    f"💰 ยอดขาย: {formatted_amount} บาท"
-                )
-
-        except ValueError:
-            reply = (
-                "❌ รูปแบบยอดขายไม่ถูกต้อง\n\n"
-                "กรุณาพิมพ์ตัวเลข เช่น:\n"
-                "ยอดขาย 2500"
-            )
-
-        except Exception:
-            reply = (
-                "⚠️ ระบบยังบันทึกยอดขายไม่ได้ในขณะนี้\n\n"
-                "กรุณาลองใหม่อีกครั้ง"
-            )
-
-    elif normalized_message == "ค่าใช้จ่าย":
-        reply = (
-            "💸 กรุณาใส่จำนวนเงินและรายละเอียด\n\n"
-            "ตัวอย่าง:\n"
-            "ค่าใช้จ่าย 350 ค่านม"
-        )
-
-    elif normalized_message.startswith("ค่าใช้จ่าย "):
-        expense_text = user_message.replace("ค่าใช้จ่าย", "", 1).strip()
-        expense_parts = expense_text.split(maxsplit=1)
-
-        amount_text = expense_parts[0].replace(",", "")
-
-        if len(expense_parts) > 1:
-            description = expense_parts[1].strip()
+        # ไม่พบคำสั่ง
         else:
-            description = "ไม่ระบุรายละเอียด"
-
-        try:
-            amount = float(amount_text)
-
-            if amount <= 0:
-                reply = "❌ ค่าใช้จ่ายต้องมากกว่า 0 บาท"
-            else:
-                date_text, time_text = record_expense(
-                    amount,
-                    description,
-                )
-
-                if amount.is_integer():
-                    formatted_amount = f"{amount:,.0f}"
-                else:
-                    formatted_amount = f"{amount:,.2f}"
-
-                reply = (
-                    "✅ บันทึกค่าใช้จ่ายเรียบร้อย\n\n"
-                    f"📅 วันที่: {date_text}\n"
-                    f"⏰ เวลา: {time_text}\n"
-                    f"💸 ค่าใช้จ่าย: {formatted_amount} บาท\n"
-                    f"📝 รายละเอียด: {description}"
-                )
-
-        except ValueError:
             reply = (
-                "❌ รูปแบบค่าใช้จ่ายไม่ถูกต้อง\n\n"
-                "กรุณาพิมพ์ตัวเลข เช่น:\n"
-                "ค่าใช้จ่าย 350 ค่านม"
+                "ขออภัยค่ะ FlowMate ยังไม่เข้าใจข้อความนี้\n\n"
+                "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งที่ใช้ได้"
             )
 
-        except Exception:
-            reply = (
-                "⚠️ ระบบยังบันทึกค่าใช้จ่ายไม่ได้ในขณะนี้\n\n"
-                "กรุณาลองใหม่อีกครั้ง"
-            )
+    except Exception as error:
+        print(f"เกิดข้อผิดพลาดใน handlers.py: {error}")
 
-    elif normalized_message == "ลูกค้า":
         reply = (
-            "👥 กรุณาใส่จำนวนลูกค้า\n\n"
-            "ตัวอย่าง:\n"
-            "ลูกค้า 5"
-        )
-
-    elif normalized_message.startswith("ลูกค้า "):
-        customer_text = user_message.replace("ลูกค้า", "", 1).strip()
-        customer_text = customer_text.replace(",", "")
-
-        try:
-            customer_count = int(customer_text)
-
-            if customer_count <= 0:
-                reply = "❌ จำนวนลูกค้าต้องมากกว่า 0 คน"
-            else:
-                date_text, time_text = record_customer(customer_count)
-
-                reply = (
-                    "✅ บันทึกจำนวนลูกค้าเรียบร้อย\n\n"
-                    f"📅 วันที่: {date_text}\n"
-                    f"⏰ เวลา: {time_text}\n"
-                    f"👥 จำนวนลูกค้า: {customer_count} คน"
-                )
-
-        except ValueError:
-            reply = (
-                "❌ รูปแบบจำนวนลูกค้าไม่ถูกต้อง\n\n"
-                "กรุณาพิมพ์เป็นจำนวนเต็ม เช่น:\n"
-                "ลูกค้า 5"
-            )
-
-        except Exception:
-            reply = (
-                "⚠️ ระบบยังบันทึกจำนวนลูกค้าไม่ได้ในขณะนี้\n\n"
-                "กรุณาลองใหม่อีกครั้ง"
-            )
-            
-    elif normalized_message in ["รายงาน", "สรุปวันนี้"]:
-        try:
-            report = get_daily_sales_report()
-
-            total_sales = report["total_sales"]
-            total_expenses = report["total_expenses"]
-            profit = report["profit"]
-            transaction_count = report["transaction_count"]
-            average_sales = report["average_sales"]
-            latest_sales = report["latest_sales"]
-            latest_expenses = report["latest_expenses"]
-            total_customers = report["total_customers"]
-            average_sales_per_customer = report["average_sales_per_customer"]
-            latest_customers = report["latest_customers"]
-            latest_sales_text = ""
-
-            for item in latest_sales:
-                latest_sales_text += (
-                    f"• {item['time']} — "
-                    f"{item['amount']:,.2f} บาท\n"
-                )
-
-            latest_expenses_text = ""
-
-            for item in latest_expenses:
-                latest_expenses_text += (
-                    f"• {item['time']} — "
-                    f"{item['amount']:,.2f} บาท "
-                    f"({item['description']})\n"
-                )
-
-            if profit >= 0:
-                profit_text = (
-                    "💵 กำไรสุทธิ\n"
-                    f"{profit:,.2f} บาท"
-                )
-            else:
-                profit_text = (
-                    "🔻 ขาดทุนสุทธิ\n"
-                    f"{abs(profit):,.2f} บาท"
-                )
-
-            reply = (
-                "📊 สรุปร้านค้าประจำวัน\n"
-                f"📅 {report['date']}\n\n"
-                "──────────────\n\n"
-                "💰 ยอดขาย\n"
-                f"{total_sales:,.2f} บาท\n\n"
-                "💸 ค่าใช้จ่าย\n"
-                f"{total_expenses:,.2f} บาท\n\n"
-                f"{profit_text}\n\n"
-                "──────────────\n\n"
-                f"👥 ลูกค้าทั้งหมด: {total_customers} คน\n"
-                f"🧾 รายการขาย: {transaction_count} รายการ\n"
-                f"🛒 ยอดเฉลี่ยต่อลูกค้า: "
-                f"{average_sales_per_customer:,.2f} บาท\n"
-                f"📈 ยอดเฉลี่ยต่อรายการ: {average_sales:,.2f} บาท"
-            )
-
-            if latest_sales_text:
-                reply += (
-                    "\n\n🕒 ยอดขายล่าสุด\n"
-                    f"{latest_sales_text}"
-                )
-
-            if latest_expenses_text:
-                reply += (
-                    "\n💸 ค่าใช้จ่ายล่าสุด\n"
-                    f"{latest_expenses_text}"
-                )
-
-        except Exception:
-            reply = (
-                "⚠️ ระบบยังเปิดรายงานไม่ได้ในขณะนี้\n\n"
-                "กรุณาลองใหม่อีกครั้ง"
-            )
-
-    elif normalized_message == "ช่วยเหลือ":
-        reply = (
-            "🆘 วิธีใช้งาน FlowMate\n\n"
-            "• เมนู\n"
-            "• ยอดขาย 2500\n"
-            "• ค่าใช้จ่าย 350 ค่านม\n"
-            "• ลูกค้า 5\n"
-            "• รายงาน\n"
-            "• ช่วยเหลือ"
-        )
-
-    else:
-        reply = (
-            "ขออภัยค่ะ FlowMate ยังไม่เข้าใจข้อความนี้\n\n"
-            "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งที่ใช้ได้"
+            "⚠️ ระบบเกิดข้อผิดพลาดชั่วคราว\n\n"
+            "กรุณาลองใหม่อีกครั้ง"
         )
 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=reply)
+        TextSendMessage(text=reply),
     )
