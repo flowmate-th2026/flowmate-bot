@@ -128,20 +128,20 @@ def get_daily_sales_report():
             }
         )
 
-        total_sales = sum(
-            item["amount"] for item in valid_sales
+    total_sales = sum(
+        item["amount"] for item in valid_sales
     )
 
-        total_expenses = sum(
-            item["amount"] for item in valid_expenses
+    total_expenses = sum(
+        item["amount"] for item in valid_expenses
     )
 
-        total_customers = sum(
-            item["customer_count"] for item in valid_customers
+    total_customers = sum(
+        item["customer_count"] for item in valid_customers
     )
 
-        total_product_quantity = sum(
-            item["quantity"] for item in valid_products
+    total_product_quantity = sum(
+        item["quantity"] for item in valid_products
     )
 
     product_summary = {}
