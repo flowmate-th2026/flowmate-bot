@@ -1,48 +1,25 @@
 from linebot.models import FlexSendMessage
 
 
-def create_success_flex(
-    record_type,
-    amount,
-    description,
-    date_text,
-    time_text,
-    category="อื่นๆ",
+def create_report_flex(
+    sales,
+    expense,
+    customer,
+    profit,
 ):
     """
-    สร้าง Flex Message ยืนยันการบันทึกรายการสำเร็จ
-
-    record_type: "ยอดขาย" หรือ "ค่าใช้จ่าย"
-    amount: จำนวนเงิน
-    description: รายละเอียดรายการ
-    date_text: วันที่
-    time_text: เวลา
-    category: หมวดหมู่
+    Flex Message รายงานประจำวัน
     """
 
-    try:
-        amount_number = float(amount)
-        formatted_amount = f"{amount_number:,.2f}"
-    except (TypeError, ValueError):
-        formatted_amount = str(amount)
-
-    if record_type == "ยอดขาย":
-        accent_color = "#1677FF"
-        light_color = "#EAF3FF"
-        title_text = "บันทึกยอดขายสำเร็จ"
-        icon_text = "💰"
-    else:
-        accent_color = "#D9368B"
-        light_color = "#FFF0F6"
-        title_text = "บันทึกค่าใช้จ่ายสำเร็จ"
-        icon_text = "🧾"
+    def money(value):
+        return f"{float(value):,.2f}"
 
     flex_contents = {
         "type": "bubble",
         "size": "mega",
         "styles": {
             "header": {
-                "backgroundColor": light_color
+                "backgroundColor": "#EAF4FF"
             },
             "body": {
                 "backgroundColor": "#FFFFFF"
@@ -50,100 +27,65 @@ def create_success_flex(
             "footer": {
                 "backgroundColor": "#FFFFFF"
             }
-        },
-        "header": {
+        }
+    "header": {
             "type": "box",
             "layout": "vertical",
             "paddingAll": "20px",
             "contents": [
+
                 {
                     "type": "text",
-                    "text": f"{icon_text} จดสำเร็จ ✅",
+                    "text": "📊 รายงานวันนี้",
                     "weight": "bold",
                     "size": "xl",
-                    "color": "#222222"
+                    "color": "#1E3A8A"
                 },
+
                 {
                     "type": "text",
-                    "text": "อย่าลืมตรวจสอบรายละเอียดอีกครั้งนะคะ",
+                    "text": "สรุปยอดขายและกำไรของร้าน",
                     "size": "sm",
                     "color": "#666666",
                     "margin": "md",
                     "wrap": True
                 }
+
             ]
         },
+            ,
         "body": {
             "type": "box",
             "layout": "vertical",
             "paddingAll": "20px",
             "contents": [
+
                 {
                     "type": "box",
                     "layout": "horizontal",
                     "contents": [
                         {
                             "type": "text",
-                            "text": record_type,
-                            "size": "sm",
-                            "weight": "bold",
-                            "color": "#FFFFFF",
-                            "align": "center",
-                            "gravity": "center"
-                        }
-                    ],
-                    "backgroundColor": accent_color,
-                    "cornerRadius": "20px",
-                    "paddingStart": "14px",
-                    "paddingEnd": "14px",
-                    "paddingTop": "5px",
-                    "paddingBottom": "5px",
-                    "width": "100px"
-                },
-                {
-                    "type": "text",
-                    "text": title_text,
-                    "weight": "bold",
-                    "size": "lg",
-                    "color": "#333333",
-                    "margin": "lg"
-                },
-                {
-                    "type": "text",
-                    "text": f"{date_text} เวลา {time_text}",
-                    "size": "sm",
-                    "color": "#777777",
-                    "margin": "sm"
-                },
-                {
-                    "type": "separator",
-                    "margin": "xl",
-                    "color": "#DDDDDD"
-                },
-                {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "margin": "xl",
-                    "contents": [
-                        {
-                            "type": "text",
-                            "text": "รายการ",
-                            "size": "sm",
-                            "color": "#777777",
-                            "flex": 2
+                            "text": "💰 ยอดขาย",
+                            "size": "md",
+                            "weight": "bold"
                         },
                         {
                             "type": "text",
-                            "text": str(description),
-                            "size": "md",
-                            "weight": "bold",
-                            "color": "#333333",
+                            "text": f"฿{money(sales)}",
                             "align": "end",
-                            "wrap": True,
-                            "flex": 4
+                            "size": "lg",
+                            "weight": "bold",
+                            "color": "#1677FF"
                         }
                     ]
                 },
+
+                {
+                    "type": "separator",
+                    "margin": "lg"
+                },
+
                 {
                     "type": "box",
                     "layout": "horizontal",
@@ -151,92 +93,196 @@ def create_success_flex(
                     "contents": [
                         {
                             "type": "text",
-                            "text": "หมวดหมู่",
-                            "size": "sm",
-                            "color": "#777777",
-                            "flex": 2
+                            "text": "💸 ค่าใช้จ่าย",
+                            "size": "md"
                         },
                         {
                             "type": "text",
-                            "text": str(category),
-                            "size": "md",
-                            "color": "#333333",
+                            "text": f"฿{money(expense)}",
                             "align": "end",
-                            "wrap": True,
-                            "flex": 4
+                            "size": "md",
+                            "color": "#D9368B"
                         }
                     ]
                 },
-                {
-                    "type": "separator",
-                    "margin": "xl",
-                    "color": "#DDDDDD"
-                },
+
                 {
                     "type": "box",
                     "layout": "horizontal",
-                    "margin": "xl",
+                    "margin": "md",
                     "contents": [
                         {
                             "type": "text",
-                            "text": "จำนวนเงิน",
-                            "size": "md",
-                            "weight": "bold",
-                            "color": "#333333",
-                            "gravity": "center"
+                            "text": "👥 ลูกค้า",
+                            "size": "md"
                         },
                         {
                             "type": "text",
-                            "text": f"฿{formatted_amount}",
-                            "size": "xxl",
+                            "text": str(customer),
+                            "align": "end",
+                            "size": "md"
+                        }
+                    ]
+                },
+
+                {
+                    "type": "separator",
+                    "margin": "lg"
+                },
+
+                {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "margin": "lg",
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": "📈 กำไร",
                             "weight": "bold",
-                            "color": accent_color,
-                            "align": "end"
+                            "size": "lg"
+                        },
+                        {
+                            "type": "text",
+                            "text": f"฿{money(profit)}",
+                            "align": "end",
+                            "weight": "bold",
+                            "size": "xl",
+                            "color": "#00AA55"
                         }
                     ]
                 }
+
             ]
         },
-        "footer": {
-            "type": "box",
-            "layout": "vertical",
-            "paddingAll": "16px",
-            "contents": [
-                {
-                    "type": "button",
-                    "style": "primary",
-                    "height": "sm",
-                    "color": accent_color,
-                    "action": {
-                        "type": "message",
-                        "label": "ดูรายงานวันนี้",
-                        "text": "รายงานวันนี้"
-                    }
-                },
-                {
-                    "type": "button",
-                    "style": "secondary",
-                    "height": "sm",
-                    "margin": "sm",
-                    "action": {
-                        "type": "message",
-                        "label": "กลับไปที่เมนู",
-                        "text": "เมนู"
-                    }
-                },
-                {
-                    "type": "text",
-                    "text": "FlowMate • ผู้ช่วยจัดการร้านค้า",
-                    "size": "xs",
-                    "color": "#999999",
-                    "align": "center",
-                    "margin": "lg"
-                }
-            ]
-        }
-    }
+{
+    "type": "separator",
+    "margin": "lg"
+},
 
-    return FlexSendMessage(
-        alt_text=f"{title_text} ฿{formatted_amount}",
-        contents=flex_contents,
-    )
+{
+    "type": "box",
+    "layout": "horizontal",
+    "margin": "lg",
+    "contents": [
+        {
+            "type": "text",
+            "text": "💸 ค่าใช้จ่าย",
+            "size": "md"
+        },
+        {
+            "type": "text",
+            "text": f"฿{money(expense)}",
+            "align": "end",
+            "size": "md",
+            "color": "#D9368B"
+        }
+    ]
+},
+
+{
+    "type": "box",
+    "layout": "horizontal",
+    "margin": "md",
+    "contents": [
+        {
+            "type": "text",
+            "text": "👥 ลูกค้า",
+            "size": "md"
+        },
+        {
+            "type": "text",
+            "text": str(customer),
+            "align": "end",
+            "size": "md"
+        }
+    ]
+},
+
+{
+    "type": "separator",
+    "margin": "lg"
+},
+
+{
+    "type": "box",
+    "layout": "horizontal",
+    "margin": "lg",
+    "contents": [
+        {
+            "type": "text",
+            "text": "📈 กำไร",
+            "weight": "bold",
+            "size": "lg"
+        },
+        {
+            "type": "text",
+            "text": f"฿{money(profit)}",
+            "align": "end",
+            "weight": "bold",
+            "size": "xl",
+            "color": "#00AA55"
+        }
+    ]
+}
+]
+},
+"footer": {
+    "type": "box",
+    "layout": "vertical",
+    "paddingAll": "16px",
+    "contents": [
+
+        {
+            "type": "button",
+            "style": "primary",
+            "height": "sm",
+            "color": "#1677FF",
+            "action": {
+                "type": "message",
+                "label": "📅 รายงานสัปดาห์",
+                "text": "รายงานสัปดาห์"
+            }
+        },
+
+        {
+            "type": "button",
+            "style": "primary",
+            "height": "sm",
+            "margin": "sm",
+            "color": "#00AA55",
+            "action": {
+                "type": "message",
+                "label": "📆 รายงานเดือน",
+                "text": "รายงานเดือน"
+            }
+        },
+
+        {
+            "type": "button",
+            "style": "secondary",
+            "height": "sm",
+            "margin": "sm",
+            "action": {
+                "type": "message",
+                "label": "🏠 กลับเมนู",
+                "text": "เมนู"
+            }
+        },
+
+        {
+            "type": "text",
+            "text": "FlowMate • Smart Business Assistant",
+            "size": "xs",
+            "color": "#999999",
+            "align": "center",
+            "margin": "lg"
+        }
+
+    ]
+}
+}
+
+return FlexSendMessage(
+    alt_text="รายงานประจำวัน",
+    contents=flex_contents
+)
