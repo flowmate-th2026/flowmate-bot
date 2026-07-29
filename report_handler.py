@@ -1,4 +1,4 @@
-from services import get_daily_sales_report
+from report_service import get_daily_sales_report
 
 
 def handle_report_message():
