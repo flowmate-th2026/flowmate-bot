@@ -101,7 +101,10 @@ def handle_menu_message(normalized_message):
     if normalized_message == "ยอดขาย":
         return create_sales_flex_message()
 
-    if normalized_message == "กรอกยอดขายรวม":
+    if normalized_message in [
+        "กรอกยอดขายรวม",
+        "บันทึกยอดขายรวม",
+    ]:
         return (
             "💰 กรุณาพิมพ์ยอดขายรวมตามรูปแบบนี้\n\n"
             "ยอดขาย 2500\n\n"
@@ -109,7 +112,10 @@ def handle_menu_message(normalized_message):
             "ยอดขาย 850"
         )
 
-    if normalized_message == "กรอกสินค้าที่ขาย":
+    if normalized_message in [
+        "กรอกสินค้าที่ขาย",
+        "บันทึกสินค้าที่ขาย",
+    ]:
         return (
             "🛍️ กรุณาพิมพ์สินค้าที่ขายตามรูปแบบนี้\n\n"
             "ขาย ชื่อสินค้า จำนวน ยอดขายรวม\n\n"
