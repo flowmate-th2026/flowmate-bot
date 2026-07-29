@@ -1,3 +1,4 @@
+from datetime import datetime
 import gspread
 
 from config import GOOGLE_CREDENTIALS_FILE, GOOGLE_SHEET_ID
@@ -139,4 +140,32 @@ def get_product_rows_by_date(date_text):
 
     return product_rows
 
-    
+def get_rows_by_date_range(start_date, end_date):
+    """
+    อ่านข้อมูลทั้งหมดที่อยู่ในช่วงวันที่กำหนด
+
+    start_date และ end_date ต้องเป็น date object
+    """
+
+    worksheet = get_sales_worksheet()
+    records = worksheet.get_all_records()
+
+    rows_in_range = []
+
+    for row in records:
+        row_date_text = str(
+            row.get("วันที่", "")
+        ).strip()
+
+        try:
+            row_date = datetime.strptime(
+                row_date_text,
+                "%d/%m/%Y",
+            ).date()
+        except (ValueError, TypeError):
+            continue
+
+        if start_date <= row_date <= end_date:
+            rows_in_range.append(row)
+
+    return rows_in_range   
