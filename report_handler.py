@@ -18,6 +18,9 @@ def handle_report_message():
         latest_expenses = report["latest_expenses"]
         total_customers = report["total_customers"]
         average_sales_per_customer = report["average_sales_per_customer"]
+        total_product_quantity = report["total_product_quantity"]
+        product_transaction_count = report["product_transaction_count"]
+        top_products = report["top_products"]
 
         latest_sales_text = ""
 
@@ -36,6 +39,15 @@ def handle_report_message():
                 f"({item['description']})\n"
             )
 
+        top_products_text = ""
+
+        for index, item in enumerate(top_products, start=1):
+            top_products_text += (
+                f"{index}. {item['product_name']} — "
+                f"{item['quantity']:,} ชิ้น "
+                f"({item['amount']:,.2f} บาท)\n"
+            )
+
         if profit >= 0:
             profit_text = (
                 "💵 กำไรสุทธิ\n"
@@ -47,7 +59,7 @@ def handle_report_message():
                 f"{abs(profit):,.2f} บาท"
             )
 
-        reply = (
+         reply = (
             "📊 สรุปร้านค้าประจำวัน\n"
             f"📅 {report['date']}\n\n"
             "──────────────\n\n"
@@ -62,8 +74,24 @@ def handle_report_message():
             f"🛒 ยอดเฉลี่ยต่อลูกค้า: "
             f"{average_sales_per_customer:,.2f} บาท\n"
             f"📈 ยอดเฉลี่ยต่อรายการ: "
-            f"{average_sales:,.2f} บาท"
+            f"{average_sales:,.2f} บาท\n\n"
+            "──────────────\n\n"
+            f"🛍️ สินค้าที่ขายทั้งหมด: "
+            f"{total_product_quantity:,} ชิ้น\n"
+            f"🧾 รายการขายสินค้า: "
+            f"{product_transaction_count:,} รายการ"
         )
+
+        if top_products_text:
+            reply += (
+                "\n\n🏆 Top 3 สินค้าขายดี\n"
+                f"{top_products_text.rstrip()}"
+            )
+        else:
+            reply += (
+                "\n\n🏆 Top 3 สินค้าขายดี\n"
+                "ยังไม่มีข้อมูลสินค้าที่ขายวันนี้"
+            )
 
         if latest_sales_text:
             reply += (
