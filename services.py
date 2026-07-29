@@ -96,13 +96,13 @@ def get_daily_expense():
 
     return total
 
-def get_daily_expense():
+def get_daily_customer():
     today = get_thailand_time().strftime("%d/%m/%Y")
-    rows = get_expense_rows_by_date(today)
+    rows = get_customer_rows_by_date(today)
 
     total = 0
 
     for row in rows:
-        total += float(row.get("จำนวนเงิน", 0))
+        total += int(row.get("จำนวนลูกค้า", 0))
 
     return total
