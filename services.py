@@ -15,18 +15,21 @@ def get_thailand_time():
     return datetime.now(ZoneInfo("Asia/Bangkok"))
 
 
-def record_sale(amount):
-    thailand_time = get_thailand_time()
-
-    date_text = thailand_time.strftime("%d/%m/%Y")
-    time_text = thailand_time.strftime("%H:%M")
+def record_sale(
+    amount,
+    sheet_id=None,
+):
+    now = get_thailand_time()
+    date_text = now.strftime("%d/%m/%Y")
+    time_text = now.strftime("%H:%M")
 
     append_sale_row(
-        date_text=date_text,
-        time_text=time_text,
-        amount=amount,
+        date_text,
+        time_text,
+        amount,
+        sheet_id=sheet_id,
     )
-    
+
     return date_text, time_text
 
 def record_expense(amount, description):
