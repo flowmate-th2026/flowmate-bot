@@ -61,7 +61,12 @@ def record_customer(customer_count):
 
     return date_text, time_text
 
-def record_product(product_name, quantity, amount):
+def record_product(
+    product_name,
+    quantity,
+    amount,
+    sheet_id=None,
+):
     thailand_time = get_thailand_time()
 
     date_text = thailand_time.strftime("%d/%m/%Y")
@@ -73,6 +78,7 @@ def record_product(product_name, quantity, amount):
         product_name=product_name,
         quantity=quantity,
         amount=amount,
+        sheet_id=sheet_id,
     )
 
     return date_text, time_text
