@@ -65,7 +65,19 @@ def handle_text_message(event, line_bot_api):
         
         # บันทึกยอดขาย เช่น ยอดขาย 2500
         elif normalized_message.startswith("ยอดขาย "):
-            reply = handle_sales_message(user_message)
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if not shop:
+                reply = (
+                    "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
+                    "กรุณาติดต่อผู้ดูแล FlowMate"
+                )
+            else:
+                reply = handle_sales_message(
+                    user_message,
+                    sheet_id=shop["sheet_id"],
+                )
 
         # ดูสินค้าขายดี Top 3
         elif normalized_message in [
