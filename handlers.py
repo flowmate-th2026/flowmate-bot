@@ -93,7 +93,19 @@ def handle_text_message(event, line_bot_api):
             normalized_message == "ขาย"
             or normalized_message.startswith("ขาย ")
         ):
-            reply = handle_product_message(user_message)
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if not shop:
+                reply = (
+                    "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
+                    "กรุณาติดต่อผู้ดูแล FlowMate"
+                )
+            else:
+                reply = handle_product_message(
+                    user_message,
+                    sheet_id=shop["sheet_id"],
+                )
 
         # บันทึกค่าใช้จ่าย
         elif (
