@@ -89,11 +89,13 @@ def get_sales_rows_by_date(date_text):
         row_date = str(row.get("วันที่", "")).strip()
         row_type = str(row.get("ประเภท", "")).strip()
 
-        if row_date == date_text and row_type == "ยอดขาย":
+        if (
+            row_date == date_text
+            and row_type in ["ยอดขาย", "ขายสินค้า"]
+        ):
             sales_rows.append(row)
 
     return sales_rows
-
 
 def get_expense_rows_by_date(date_text):
     worksheet = get_sales_worksheet()
