@@ -85,9 +85,11 @@ def get_sales_worksheet(sheet_id=None):
 
     return spreadsheet.get_worksheet(0)
 
-def append_sale_row(
+def append_product_row(
     date_text,
     time_text,
+    product_name,
+    quantity,
     amount,
     sheet_id=None,
 ):
