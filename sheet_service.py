@@ -99,11 +99,11 @@ def append_product_row(
         [
             date_text,
             time_text,
-            "ยอดขาย",
+            "ขายสินค้า",
             amount,
             "",
-            "",
-            "",
+            product_name,
+            quantity,
         ],
         value_input_option="USER_ENTERED",
     )
