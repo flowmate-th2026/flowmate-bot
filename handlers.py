@@ -7,7 +7,10 @@ from period_report_handler import (
     handle_monthly_report_message,
     handle_weekly_report_message,
 )
-from product_handler import handle_product_message
+from product_handler import (
+    handle_product_message,
+    handle_top_products_message,
+)
 from report_handler import handle_report_message
 from sales_handler import handle_sales_message
 
@@ -42,6 +45,15 @@ def handle_text_message(event, line_bot_api):
         elif normalized_message.startswith("ยอดขาย "):
             reply = handle_sales_message(user_message)
 
+        # ดูสินค้าขายดี Top 3
+        elif normalized_message in [
+            "สินค้าขายดี",
+            "ขายดี",
+            "top 3",
+            "top3",
+        ]:
+            reply = handle_top_products_message()
+            
         # บันทึกสินค้าที่ขาย เช่น ขาย มัทฉะลาเต้ 2 110
         elif (
             normalized_message == "ขาย"
