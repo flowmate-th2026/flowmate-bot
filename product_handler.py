@@ -85,3 +85,100 @@ def handle_product_message(user_message):
             "⚠️ ระบบยังบันทึกสินค้าไม่ได้ในขณะนี้\n\n"
             "กรุณาลองใหม่อีกครั้ง"
         )
+        
+from collections import defaultdict
+
+from sheet_service import get_product_rows_by_date
+from services import get_thailand_time
+
+
+def handle_top_products_message():
+    """
+    สรุปสินค้าขายดี Top 3 ของวันนี้
+    """
+
+    now = get_thailand_time()
+    date_text = now.strftime("%d/%m/%Y")
+
+    product_rows = get_product_rows_by_date(date_text)
+
+    if not product_rows:
+        return (
+            "🏆 สินค้าขายดีวันนี้\n\n"
+            "ยังไม่มีข้อมูลการขายสินค้าในวันนี้ค่ะ"
+        )
+
+    product_summary = defaultdict(
+        lambda: {
+            "quantity": 0,
+            "amount": 0.0,
+        }
+    )
+
+    for row in product_rows:
+        product_name = str(
+            row.get("ชื่อสินค้า", "")
+        ).strip()
+
+        try:
+            quantity = int(
+                float(row.get("จำนวนขาย", 0) or 0)
+            )
+        except (ValueError, TypeError):
+            quantity = 0
+
+        try:
+            amount = float(
+                row.get("จำนวนเงิน", 0) or 0
+            )
+        except (ValueError, TypeError):
+            amount = 0.0
+
+        if product_name:
+            product_summary[product_name]["quantity"] += quantity
+            product_summary[product_name]["amount"] += amount
+
+    sorted_products = sorted(
+        product_summary.items(),
+        key=lambda item: item[1]["quantity"],
+        reverse=True,
+    )
+
+    top_products = sorted_products[:3]
+
+    medals = ["🥇", "🥈", "🥉"]
+
+    report_lines = [
+        "🏆 สินค้าขายดีวันนี้",
+        "",
+    ]
+
+    total_quantity = 0
+    total_amount = 0.0
+
+    for index, (product_name, data) in enumerate(
+        top_products
+    ):
+        quantity = data["quantity"]
+        amount = data["amount"]
+
+        report_lines.append(
+            f"{medals[index]} {product_name}"
+        )
+        report_lines.append(
+            f"   {quantity} ชิ้น — {amount:,.2f} บาท"
+        )
+
+    for data in product_summary.values():
+        total_quantity += data["quantity"]
+        total_amount += data["amount"]
+
+    report_lines.extend(
+        [
+            "",
+            f"รวมขายสินค้า {total_quantity} ชิ้น",
+            f"ยอดขายสินค้า {total_amount:,.2f} บาท",
+        ]
+    )
+
+    return "\n".join(report_lines)
