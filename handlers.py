@@ -46,10 +46,10 @@ def handle_text_message(event, line_bot_api):
             "line id",
             "line user id",
         ]:
-        reply = (
-            "🆔 LINE User ID ของคุณ\n\n"
-            f"{event.source.user_id}"
-        )
+            reply = (
+                "🆔 LINE User ID ของคุณ\n\n"
+                f"{event.source.user_id}"
+            )
         
         # บันทึกยอดขาย เช่น ยอดขาย 2500
         elif normalized_message.startswith("ยอดขาย "):
