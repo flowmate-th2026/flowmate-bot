@@ -65,15 +65,25 @@ def get_shop_by_line_user_id(line_user_id):
 
     return None 
     
-def get_sales_worksheet():
+def get_sales_worksheet(sheet_id=None):
+    """
+    เปิดชีตข้อมูลร้านค้า
+
+    ถ้ามี sheet_id จะเปิดชีตของร้านนั้น
+    ถ้าไม่มี จะใช้ชีตร้านต้นแบบเดิม
+    """
+
     google_client = gspread.service_account(
         filename=GOOGLE_CREDENTIALS_FILE
     )
 
-    spreadsheet = google_client.open_by_key(GOOGLE_SHEET_ID)
-    worksheet = spreadsheet.get_worksheet(0)
+    target_sheet_id = sheet_id or GOOGLE_SHEET_ID
 
-    return worksheet
+    spreadsheet = google_client.open_by_key(
+        target_sheet_id
+    )
+
+    return spreadsheet.get_worksheet(0)
 
 
 def append_sale_row(date_text, time_text, amount):
