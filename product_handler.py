@@ -83,12 +83,15 @@ def handle_product_message(
         )
 
     except Exception as error:
-        print(f"เกิดข้อผิดพลาดใน product_handler.py: {error}")
+            print(
+                f"เกิดข้อผิดพลาดใน product_handler.py: {repr(error)}",
+                flush=True,
+            )
 
-        return (
-            "⚠️ ระบบยังบันทึกสินค้าไม่ได้ในขณะนี้\n\n"
-            "กรุณาลองใหม่อีกครั้ง"
-        )
+            return (
+                "⚠️ ระบบยังบันทึกสินค้าไม่ได้ในขณะนี้\n\n"
+                "กรุณาลองใหม่อีกครั้ง"
+            )
         
 from collections import defaultdict
 
