@@ -157,27 +157,6 @@ def append_customer_row(date_text, time_text, customer_count):
         value_input_option="USER_ENTERED",
     )
 
-def append_product_row(
-    date_text,
-    time_text,
-    product_name,
-    quantity,
-    amount,
-):
-    worksheet = get_sales_worksheet()
-
-    worksheet.append_row(
-        [
-            date_text,
-            time_text,
-            "ขายสินค้า",
-            amount,
-            "",
-            product_name,
-            quantity,
-        ],
-        value_input_option="USER_ENTERED",
-    )
 def get_sales_rows_by_date(date_text):
     worksheet = get_sales_worksheet()
     records = worksheet.get_all_records()
