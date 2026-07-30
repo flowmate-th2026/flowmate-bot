@@ -1,7 +1,10 @@
 from services import record_product
 
 
-def handle_product_message(user_message):
+def handle_product_message(
+    user_message,
+    sheet_id=None,
+):
     """
     ตรวจสอบและบันทึกสินค้าที่ขาย
 
@@ -55,6 +58,7 @@ def handle_product_message(user_message):
             product_name=product_name,
             quantity=quantity,
             amount=amount,
+            sheet_id=sheet_id,
         )
 
         if amount.is_integer():
