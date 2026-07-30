@@ -85,6 +85,27 @@ def get_sales_worksheet(sheet_id=None):
 
     return spreadsheet.get_worksheet(0)
 
+def append_sale_row(
+    date_text,
+    time_text,
+    amount,
+    sheet_id=None,
+):
+    worksheet = get_sales_worksheet(sheet_id)
+
+    worksheet.append_row(
+        [
+            date_text,
+            time_text,
+            "ยอดขาย",
+            amount,
+            "",
+            "",
+            "",
+        ],
+        value_input_option="USER_ENTERED",
+    )
+    
 def append_product_row(
     date_text,
     time_text,
