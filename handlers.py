@@ -13,6 +13,7 @@ from product_handler import (
 )
 from report_handler import handle_report_message
 from sales_handler import handle_sales_message
+from sheet_service import get_shop_by_line_user_id
 
 
 def handle_text_message(event, line_bot_api):
@@ -46,10 +47,21 @@ def handle_text_message(event, line_bot_api):
             "line id",
             "line user id",
         ]:
-            reply = (
-                "🆔 LINE User ID ของคุณ\n\n"
-                f"{event.source.user_id}"
-            )
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if shop:
+                reply = (
+                    "✅ พบข้อมูลร้านแล้ว\n\n"
+                    f"รหัสร้าน: {shop['shop_id']}\n"
+                    f"ชื่อร้าน: {shop['shop_name']}\n"
+                    f"สถานะ: {shop['status']}"
+                )
+            else:
+                reply = (
+                    "❌ ยังไม่พบข้อมูลร้านนี้ในระบบ\n\n"
+                    f"LINE User ID:\n{line_user_id}"
+                )
         
         # บันทึกยอดขาย เช่น ยอดขาย 2500
         elif normalized_message.startswith("ยอดขาย "):
