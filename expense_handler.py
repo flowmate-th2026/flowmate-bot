@@ -1,7 +1,10 @@
 from services import record_expense
 from success_flex import create_success_flex
 
-def handle_expense_message(user_message):
+def handle_expense_message(
+    user_message,
+    sheet_id=None,
+):
     """
     ตรวจสอบและบันทึกข้อความค่าใช้จ่าย
 
@@ -37,6 +40,7 @@ def handle_expense_message(user_message):
         date_text, time_text = record_expense(
             amount,
             description,
+            sheet_id=sheet_id,
         )
 
         if amount.is_integer():
