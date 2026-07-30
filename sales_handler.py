@@ -1,7 +1,11 @@
 from services import record_sale
 from success_flex import create_success_flex
 
-def handle_sales_message(user_message):
+
+def handle_sales_message(
+    user_message,
+    sheet_id=None,
+):
     """
     ตรวจสอบและบันทึกข้อความยอดขาย
 
@@ -27,7 +31,10 @@ def handle_sales_message(user_message):
         if amount <= 0:
             return "❌ ยอดขายต้องมากกว่า 0 บาท"
 
-        date_text, time_text = record_sale(amount)
+        date_text, time_text = record_sale(
+            amount,
+            sheet_id=sheet_id,
+        )
 
         if amount.is_integer():
             formatted_amount = f"{amount:,.0f}"
