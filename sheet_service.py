@@ -26,6 +26,45 @@ def get_registry_worksheet():
 
     return spreadsheet.get_worksheet(0)
     
+def get_shop_by_line_user_id(line_user_id):
+    """
+    ค้นหาข้อมูลร้านค้าจาก LINE User ID
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    target_line_user_id = str(line_user_id).strip()
+
+    for row in records:
+        row_line_user_id = str(
+            row.get("line_user_id", "")
+        ).strip()
+
+        status = str(
+            row.get("status", "")
+        ).strip().lower()
+
+        if (
+            row_line_user_id == target_line_user_id
+            and status == "active"
+        ):
+            return {
+                "shop_id": str(
+                    row.get("shop_id", "")
+                ).strip(),
+                "shop_name": str(
+                    row.get("shop_name", "")
+                ).strip(),
+                "line_user_id": row_line_user_id,
+                "sheet_id": str(
+                    row.get("sheet_id", "")
+                ).strip(),
+                "status": status,
+            }
+
+    return None 
+    
 def get_sales_worksheet():
     google_client = gspread.service_account(
         filename=GOOGLE_CREDENTIALS_FILE
