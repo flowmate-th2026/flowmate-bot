@@ -169,3 +169,22 @@ def get_rows_by_date_range(start_date, end_date):
             rows_in_range.append(row)
 
     return rows_in_range   
+
+def get_product_rows_by_date(date_text):
+    """
+    ดึงรายการขายสินค้าตามวันที่
+    """
+
+    worksheet = get_sales_worksheet()
+    records = worksheet.get_all_records()
+
+    product_rows = []
+
+    for row in records:
+        row_date = str(row.get("วันที่", "")).strip()
+        row_type = str(row.get("ประเภท", "")).strip()
+
+        if row_date == date_text and row_type == "ขายสินค้า":
+            product_rows.append(row)
+
+    return product_rows
