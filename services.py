@@ -32,7 +32,11 @@ def record_sale(
 
     return date_text, time_text
 
-def record_expense(amount, description):
+def record_expense(
+    amount,
+    description,
+    sheet_id=None,
+):
     thailand_time = get_thailand_time()
 
     date_text = thailand_time.strftime("%d/%m/%Y")
@@ -43,6 +47,7 @@ def record_expense(amount, description):
         time_text=time_text,
         amount=amount,
         description=description,
+        sheet_id=sheet_id,
     )
 
     return date_text, time_text
