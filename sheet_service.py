@@ -1,9 +1,31 @@
 from datetime import datetime
 import gspread
+import os
 
 from config import GOOGLE_CREDENTIALS_FILE, GOOGLE_SHEET_ID
 
+def get_registry_worksheet():
+    """
+    เปิดชีตทะเบียนร้านค้ากลาง
+    """
 
+    registry_sheet_id = os.getenv("REGISTRY_SHEET_ID")
+
+    if not registry_sheet_id:
+        raise ValueError(
+            "ไม่พบ REGISTRY_SHEET_ID ใน Environment"
+        )
+
+    google_client = gspread.service_account(
+        filename=GOOGLE_CREDENTIALS_FILE
+    )
+
+    spreadsheet = google_client.open_by_key(
+        registry_sheet_id
+    )
+
+    return spreadsheet.get_worksheet(0)
+    
 def get_sales_worksheet():
     google_client = gspread.service_account(
         filename=GOOGLE_CREDENTIALS_FILE
