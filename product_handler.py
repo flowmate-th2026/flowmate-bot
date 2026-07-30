@@ -91,22 +91,21 @@ from collections import defaultdict
 from sheet_service import get_product_rows_by_date
 from services import get_thailand_time
 
-
-def handle_top_products_message():
+def get_top_products_data(date_text, limit=3):
     """
-    สรุปสินค้าขายดี Top 3 ของวันนี้
-    """
+    คืนข้อมูลสินค้าขายดีตามวันที่
 
-    now = get_thailand_time()
-    date_text = now.strftime("%d/%m/%Y")
+    ตัวอย่างผลลัพธ์:
+    [
+        {
+            "name": "ชาไทย",
+            "quantity": 5,
+            "amount": 250.0,
+        }
+    ]
+    """
 
     product_rows = get_product_rows_by_date(date_text)
-
-    if not product_rows:
-        return (
-            "🏆 สินค้าขายดีวันนี้\n\n"
-            "ยังไม่มีข้อมูลการขายสินค้าในวันนี้ค่ะ"
-        )
 
     product_summary = defaultdict(
         lambda: {
@@ -140,11 +139,42 @@ def handle_top_products_message():
 
     sorted_products = sorted(
         product_summary.items(),
-        key=lambda item: item[1]["quantity"],
+        key=lambda item: (
+            item[1]["quantity"],
+            item[1]["amount"],
+        ),
         reverse=True,
     )
 
-    top_products = sorted_products[:3]
+    top_products = []
+
+    for product_name, data in sorted_products[:limit]:
+        top_products.append(
+            {
+                "name": product_name,
+                "quantity": data["quantity"],
+                "amount": data["amount"],
+            }
+        )
+
+    return top_products
+
+def handle_top_products_message():
+    """
+    สรุปสินค้าขายดี Top 3 ของวันนี้
+    """
+
+    now = get_thailand_time()
+    date_text = now.strftime("%d/%m/%Y")
+
+    product_rows = get_product_rows_by_date(date_text)
+    top_products = get_top_products_data(date_text, limit=3)
+
+    if not top_products:
+        return (
+            "🏆 สินค้าขายดีวันนี้\n\n"
+            "ยังไม่มีข้อมูลการขายสินค้าในวันนี้ค่ะ"
+        )
 
     medals = ["🥇", "🥈", "🥉"]
 
@@ -153,25 +183,35 @@ def handle_top_products_message():
         "",
     ]
 
+    for index, product in enumerate(top_products):
+        report_lines.append(
+            f"{medals[index]} {product['name']}"
+        )
+        report_lines.append(
+            f"   {product['quantity']} ชิ้น"
+            f" — {product['amount']:,.2f} บาท"
+        )
+
     total_quantity = 0
     total_amount = 0.0
 
-    for index, (product_name, data) in enumerate(
-        top_products
-    ):
-        quantity = data["quantity"]
-        amount = data["amount"]
+    for row in product_rows:
+        try:
+            quantity = int(
+                float(row.get("จำนวนขาย", 0) or 0)
+            )
+        except (ValueError, TypeError):
+            quantity = 0
 
-        report_lines.append(
-            f"{medals[index]} {product_name}"
-        )
-        report_lines.append(
-            f"   {quantity} ชิ้น — {amount:,.2f} บาท"
-        )
+        try:
+            amount = float(
+                row.get("จำนวนเงิน", 0) or 0
+            )
+        except (ValueError, TypeError):
+            amount = 0.0
 
-    for data in product_summary.values():
-        total_quantity += data["quantity"]
-        total_amount += data["amount"]
+        total_quantity += quantity
+        total_amount += amount
 
     report_lines.extend(
         [
