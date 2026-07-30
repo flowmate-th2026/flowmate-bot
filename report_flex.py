@@ -1,7 +1,13 @@
 from linebot.models import FlexSendMessage
 
 
-def create_report_flex(sales, expense, customer, profit):
+def create_report_flex(
+    sales,
+    expense,
+    customer,
+    profit,
+    top_products,
+):
 
     def money(value):
         return f"{float(value):,.2f}"
@@ -133,8 +139,54 @@ def create_report_flex(sales, expense, customer, profit):
                             "color": "#00AA55"
                         }
                     ]
-                }
+                },
 
+{
+    "type": "separator",
+    "margin": "xl",
+},
+{
+    "type": "text",
+    "text": "🏆 สินค้าขายดีวันนี้",
+    "weight": "bold",
+    "size": "md",
+    "color": "#1E3A8A",
+    "margin": "xl",
+},
+{
+    "type": "box",
+    "layout": "vertical",
+    "margin": "md",
+    "spacing": "sm",
+    "contents": (
+        [
+            {
+                "type": "text",
+                "text": (
+                    f"{medal} {product['name']} "
+                    f"— {product['quantity']} ชิ้น"
+                ),
+                "size": "sm",
+                "color": "#374151",
+                "wrap": True,
+            }
+            for medal, product in zip(
+                ["🥇", "🥈", "🥉"],
+                top_products,
+            )
+        ]
+        if top_products
+        else [
+            {
+                "type": "text",
+                "text": "ยังไม่มีข้อมูลการขายสินค้าในวันนี้",
+                "size": "sm",
+                "color": "#6B7280",
+                "wrap": True,
+            }
+        ]
+    ),
+},       
             ]
         },
 
