@@ -98,7 +98,11 @@ from collections import defaultdict
 from sheet_service import get_product_rows_by_date
 from services import get_thailand_time
 
-def get_top_products_data(date_text, limit=3):
+def get_top_products_data(
+    date_text,
+    limit=3,
+    sheet_id=None,
+):
     """
     คืนข้อมูลสินค้าขายดีตามวันที่
 
@@ -112,7 +116,10 @@ def get_top_products_data(date_text, limit=3):
     ]
     """
 
-    product_rows = get_product_rows_by_date(date_text)
+    product_rows = get_product_rows_by_date(
+            date_text,
+            sheet_id=sheet_id,
+        )
 
     product_summary = defaultdict(
         lambda: {
