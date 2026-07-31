@@ -1,7 +1,10 @@
 from services import record_customer
 
 
-def handle_customer_message(user_message):
+def handle_customer_message(
+    user_message,
+    sheet_id=None,
+):
     """
     ตรวจสอบและบันทึกจำนวนลูกค้า
 
@@ -27,7 +30,10 @@ def handle_customer_message(user_message):
         if customer_count <= 0:
             return "❌ จำนวนลูกค้าต้องมากกว่า 0 คน"
 
-        date_text, time_text = record_customer(customer_count)
+        date_text, time_text = record_customer(
+            customer_count=customer_count,
+            sheet_id=sheet_id,
+        )
 
         return (
             "✅ บันทึกจำนวนลูกค้าเรียบร้อย\n\n"
