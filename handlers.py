@@ -185,7 +185,10 @@ def handle_text_message(event, line_bot_api):
             )
 
     except Exception as error:
-        print(f"เกิดข้อผิดพลาดใน handlers.py: {error}")
+        print(
+            f"เกิดข้อผิดพลาดใน handlers.py: {repr(error)}",
+            flush=True,
+        )
 
         reply = (
             "⚠️ ระบบเกิดข้อผิดพลาดชั่วคราว\n\n"
