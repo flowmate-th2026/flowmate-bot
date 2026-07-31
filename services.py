@@ -52,7 +52,10 @@ def record_expense(
 
     return date_text, time_text
 
-def record_customer(customer_count):
+def record_customer(
+    customer_count,
+    sheet_id=None,
+):
     thailand_time = get_thailand_time()
 
     date_text = thailand_time.strftime("%d/%m/%Y")
@@ -62,6 +65,7 @@ def record_customer(customer_count):
         date_text=date_text,
         time_text=time_text,
         customer_count=customer_count,
+        sheet_id=sheet_id,
     )
 
     return date_text, time_text
