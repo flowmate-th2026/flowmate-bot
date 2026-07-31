@@ -63,7 +63,7 @@ def get_shop_by_line_user_id(line_user_id):
                 "status": status,
             }
 
-    return None 
+    return None
     
 def get_sales_worksheet(sheet_id=None):
     """
