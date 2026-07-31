@@ -168,8 +168,11 @@ def append_customer_row(
         value_input_option="USER_ENTERED",
     )
 
-def get_sales_rows_by_date(date_text):
-    worksheet = get_sales_worksheet()
+def get_sales_rows_by_date(
+    date_text,
+    sheet_id=None,
+):
+    worksheet = get_sales_worksheet(sheet_id)
     records = worksheet.get_all_records()
 
     sales_rows = []
