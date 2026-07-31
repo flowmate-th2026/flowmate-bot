@@ -149,8 +149,13 @@ def append_expense_row(
         value_input_option="USER_ENTERED",
     )
 
-def append_customer_row(date_text, time_text, customer_count):
-    worksheet = get_sales_worksheet()
+def append_customer_row(
+    date_text,
+    time_text,
+    customer_count,
+    sheet_id=None,
+):
+    worksheet = get_sales_worksheet(sheet_id)
 
     worksheet.append_row(
         [
