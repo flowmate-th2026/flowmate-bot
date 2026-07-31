@@ -95,7 +95,7 @@ def handle_product_message(
         
 from collections import defaultdict
 
-from sheet_service import get_product_rows_by_date
+from sheet_service import get_shop_product_rows_by_date
 from services import get_thailand_time
 
 def get_top_products_data(
@@ -116,9 +116,9 @@ def get_top_products_data(
     ]
     """
 
-    product_rows = get_product_rows_by_date(
+    product_rows = get_shop_product_rows_by_date(
         date_text,
-        sheet_id,
+        sheet_id=sheet_id,
     )
 
     product_summary = defaultdict(
