@@ -252,6 +252,36 @@ def get_product_rows_by_date(
 
     return product_rows
 
+def get_shop_product_rows_by_date(
+    date_text,
+    sheet_id=None,
+):
+    """
+    ดึงรายการขายสินค้าตามวันที่และร้านค้า
+    """
+
+    worksheet = get_sales_worksheet(sheet_id)
+    records = worksheet.get_all_records()
+
+    product_rows = []
+
+    for row in records:
+        row_date = str(
+            row.get("วันที่", "")
+        ).strip()
+
+        row_type = str(
+            row.get("ประเภท", "")
+        ).strip()
+
+        if (
+            row_date == date_text
+            and row_type == "ขายสินค้า"
+        ):
+            product_rows.append(row)
+
+    return product_rows
+    
 def get_rows_by_date_range(start_date, end_date):
     """
     อ่านข้อมูลทั้งหมดที่อยู่ในช่วงวันที่กำหนด
