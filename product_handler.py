@@ -117,9 +117,9 @@ def get_top_products_data(
     """
 
     product_rows = get_product_rows_by_date(
-            date_text,
-            sheet_id=sheet_id,
-        )
+        date_text,
+        sheet_id,
+    )
 
     product_summary = defaultdict(
         lambda: {
