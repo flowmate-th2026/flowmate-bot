@@ -189,8 +189,11 @@ def get_sales_rows_by_date(
 
     return sales_rows
 
-def get_expense_rows_by_date(date_text):
-    worksheet = get_sales_worksheet()
+def get_expense_rows_by_date(
+    date_text,
+    sheet_id=None,
+):
+    worksheet = get_sales_worksheet(sheet_id)
     records = worksheet.get_all_records()
 
     expense_rows = []
@@ -199,7 +202,10 @@ def get_expense_rows_by_date(date_text):
         row_date = str(row.get("วันที่", "")).strip()
         row_type = str(row.get("ประเภท", "")).strip()
 
-        if row_date == date_text and row_type == "ค่าใช้จ่าย":
+        if (
+            row_date == date_text
+            and row_type == "ค่าใช้จ่าย"
+        ):
             expense_rows.append(row)
 
     return expense_rows
