@@ -164,7 +164,18 @@ def handle_text_message(event, line_bot_api):
             "รายงาน",
             "สรุปวันนี้",
         ]:
-            reply = handle_report_message()
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if not shop:
+                reply = (
+                    "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
+                    "กรุณาติดต่อผู้ดูแล FlowMate"
+                )
+            else:
+                reply = handle_report_message(
+                    sheet_id=shop["sheet_id"],
+                )
 
         # ไม่พบคำสั่ง
         else:
