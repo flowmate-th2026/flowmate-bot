@@ -92,14 +92,20 @@ def record_product(
 
     return date_text, time_text
 
-def get_daily_sales():
+def get_daily_sales(
+    sheet_id=None,
+):
     today = get_thailand_time().strftime("%d/%m/%Y")
-    rows = get_sales_rows_by_date(today)
+
+    rows = get_sales_rows_by_date(
+        today,
+        sheet_id=sheet_id,
+    )
 
     total = 0
 
     for row in rows:
-        total += float(row.get("จำนวนเงิน", 0))
+        total += float(row.get("จำนวนเงิน", 0) or 0)
 
     return total
 
