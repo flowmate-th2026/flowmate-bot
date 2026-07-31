@@ -231,8 +231,11 @@ def get_customer_rows_by_date(
 
     return customer_rows
 
-def get_product_rows_by_date(date_text):
-    worksheet = get_sales_worksheet()
+def get_product_rows_by_date(
+    date_text,
+    sheet_id=None,
+):
+    worksheet = get_sales_worksheet(sheet_id)
     records = worksheet.get_all_records()
 
     product_rows = []
@@ -241,7 +244,10 @@ def get_product_rows_by_date(date_text):
         row_date = str(row.get("วันที่", "")).strip()
         row_type = str(row.get("ประเภท", "")).strip()
 
-        if row_date == date_text and row_type == "ขายสินค้า":
+        if (
+            row_date == date_text
+            and row_type == "ขายสินค้า"
+        ):
             product_rows.append(row)
 
     return product_rows
