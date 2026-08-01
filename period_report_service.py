@@ -162,7 +162,9 @@ def get_weekly_report(
         sheet_id=sheet_id,
     )
 
-def get_monthly_report():
+def get_monthly_report(
+    sheet_id=None,
+):
     """
     รายงานตั้งแต่วันที่ 1 ของเดือนจนถึงวันนี้
     """
@@ -173,4 +175,5 @@ def get_monthly_report():
     return build_period_report(
         start_date=start_date,
         end_date=today,
+        sheet_id=sheet_id,
     )
