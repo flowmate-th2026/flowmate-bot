@@ -112,13 +112,17 @@ def handle_weekly_report_message(
         )
 
 
-def handle_monthly_report_message():
+def handle_monthly_report_message(
+    sheet_id=None,
+):
     """
     สร้างข้อความรายงานประจำเดือน
     """
 
     try:
-        report = get_monthly_report()
+        report = get_monthly_report(
+            sheet_id=sheet_id,
+        )
 
         return format_period_report(
             report=report,
