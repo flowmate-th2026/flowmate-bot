@@ -138,12 +138,15 @@ def build_period_report(start_date, end_date):
     }
 
 
-def get_weekly_report():
+def get_weekly_report(
+    sheet_id=None,
+):
     """
     รายงานตั้งแต่วันจันทร์จนถึงวันนี้
     """
 
     today = get_thailand_time().date()
+
     start_date = today - timedelta(
         days=today.weekday()
     )
@@ -151,8 +154,8 @@ def get_weekly_report():
     return build_period_report(
         start_date=start_date,
         end_date=today,
+        sheet_id=sheet_id,
     )
-
 
 def get_monthly_report():
     """
