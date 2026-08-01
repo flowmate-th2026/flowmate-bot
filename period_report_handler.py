@@ -83,13 +83,17 @@ def format_period_report(report, report_title):
     return reply
 
 
-def handle_weekly_report_message():
+def handle_weekly_report_message(
+    sheet_id=None,
+):
     """
     สร้างข้อความรายงานประจำสัปดาห์
     """
 
     try:
-        report = get_weekly_report()
+        report = get_weekly_report(
+            sheet_id=sheet_id,
+        )
 
         return format_period_report(
             report=report,
