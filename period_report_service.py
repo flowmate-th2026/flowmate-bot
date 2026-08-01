@@ -4,7 +4,11 @@ from report_service import get_thailand_time
 from sheet_service import get_rows_by_date_range
 
 
-def build_period_report(start_date, end_date):
+def build_period_report(
+    start_date,
+    end_date,
+    sheet_id=None,
+):
     """
     คำนวณรายงานจากข้อมูลในช่วงวันที่กำหนด
     """
@@ -12,6 +16,7 @@ def build_period_report(start_date, end_date):
     rows = get_rows_by_date_range(
         start_date=start_date,
         end_date=end_date,
+        sheet_id=sheet_id,
     )
 
     total_sales = 0
