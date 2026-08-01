@@ -150,14 +150,36 @@ def handle_text_message(event, line_bot_api):
             "รายงานสัปดาห์",
             "สรุปสัปดาห์",
         ]:
-            reply = handle_weekly_report_message()
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if not shop:
+                reply = (
+                    "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
+                    "กรุณาติดต่อผู้ดูแล FlowMate"
+                )
+            else:
+                reply = handle_weekly_report_message(
+                    sheet_id=shop["sheet_id"],
+                )
 
         # รายงานประจำเดือน
         elif normalized_message in [
             "รายงานเดือน",
             "สรุปเดือน",
-        ]:
-            reply = handle_monthly_report_message()
+]        :
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if not shop:
+                reply = (
+                    "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
+                    "กรุณาติดต่อผู้ดูแล FlowMate"
+                )
+            else:
+                reply = handle_monthly_report_message(
+                    sheet_id=shop["sheet_id"],
+                )
 
         # รายงานประจำวัน
         elif normalized_message in [
