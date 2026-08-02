@@ -166,7 +166,7 @@ def handle_text_message(event, line_bot_api):
             access_message = get_shop_access_message(shop)
 
             if access_message:
-            reply = access_message
+                reply = access_message
             else:
                 reply = handle_expense_message(
                     user_message,
