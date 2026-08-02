@@ -64,6 +64,94 @@ def get_shop_by_line_user_id(line_user_id):
             }
 
     return None
+
+def register_shop_request(
+    line_user_id,
+    shop_name,
+):
+    """
+    เพิ่มคำขอลงทะเบียนร้านใหม่ใน Shop Registry
+
+    ร้านที่เพิ่งลงทะเบียนจะมีสถานะ pending
+    และยังไม่มี sheet_id
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    target_line_user_id = str(
+        line_user_id
+    ).strip()
+
+    cleaned_shop_name = str(
+        shop_name
+    ).strip()
+
+    # ตรวจสอบว่า LINE User ID นี้เคยลงทะเบียนหรือยัง
+    for row in records:
+        existing_line_user_id = str(
+            row.get("line_user_id", "")
+        ).strip()
+
+        if existing_line_user_id == target_line_user_id:
+            return {
+                "success": False,
+                "reason": "already_registered",
+                "shop_id": str(
+                    row.get("shop_id", "")
+                ).strip(),
+                "shop_name": str(
+                    row.get("shop_name", "")
+                ).strip(),
+                "status": str(
+                    row.get("status", "")
+                ).strip().lower(),
+            }
+
+    # หาเลขร้านลำดับถัดไป
+    highest_number = 0
+
+    for row in records:
+        shop_id = str(
+            row.get("shop_id", "")
+        ).strip().upper()
+
+        if shop_id.startswith("SHOP"):
+            number_text = shop_id.replace(
+                "SHOP",
+                "",
+                1,
+            )
+
+            try:
+                shop_number = int(number_text)
+                highest_number = max(
+                    highest_number,
+                    shop_number,
+                )
+            except ValueError:
+                continue
+
+    new_shop_id = f"SHOP{highest_number + 1:03d}"
+
+    worksheet.append_row(
+        [
+            new_shop_id,
+            cleaned_shop_name,
+            target_line_user_id,
+            "",
+            "pending",
+        ],
+        value_input_option="USER_ENTERED",
+    )
+
+    return {
+        "success": True,
+        "reason": "created",
+        "shop_id": new_shop_id,
+        "shop_name": cleaned_shop_name,
+        "status": "pending",
+    }
     
 def get_sales_worksheet(sheet_id=None):
     """
