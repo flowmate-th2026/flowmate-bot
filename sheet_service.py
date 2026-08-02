@@ -29,6 +29,9 @@ def get_registry_worksheet():
 def get_shop_by_line_user_id(line_user_id):
     """
     ค้นหาข้อมูลร้านค้าจาก LINE User ID
+
+    คืนข้อมูลร้านทุกสถานะ:
+    active, pending และ inactive
     """
 
     worksheet = get_registry_worksheet()
@@ -41,14 +44,7 @@ def get_shop_by_line_user_id(line_user_id):
             row.get("line_user_id", "")
         ).strip()
 
-        status = str(
-            row.get("status", "")
-        ).strip().lower()
-
-        if (
-            row_line_user_id == target_line_user_id
-            and status == "active"
-        ):
+        if row_line_user_id == target_line_user_id:
             return {
                 "shop_id": str(
                     row.get("shop_id", "")
@@ -60,7 +56,9 @@ def get_shop_by_line_user_id(line_user_id):
                 "sheet_id": str(
                     row.get("sheet_id", "")
                 ).strip(),
-                "status": status,
+                "status": str(
+                    row.get("status", "")
+                ).strip().lower(),
             }
 
     return None
