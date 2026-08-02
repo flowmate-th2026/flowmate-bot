@@ -150,7 +150,43 @@ def register_shop_request(
         "shop_name": cleaned_shop_name,
         "status": "pending",
     }
-    
+
+def get_pending_shops():
+    """
+    คืนรายการร้านที่อยู่ในสถานะ pending
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    pending_shops = []
+
+    for row in records:
+        status = str(
+            row.get("status", "")
+        ).strip().lower()
+
+        if status == "pending":
+            pending_shops.append(
+                {
+                    "shop_id": str(
+                        row.get("shop_id", "")
+                    ).strip(),
+                    "shop_name": str(
+                        row.get("shop_name", "")
+                    ).strip(),
+                    "line_user_id": str(
+                        row.get("line_user_id", "")
+                    ).strip(),
+                    "sheet_id": str(
+                        row.get("sheet_id", "")
+                    ).strip(),
+                    "status": status,
+                }
+            )
+
+    return pending_shops
+
 def get_sales_worksheet(sheet_id=None):
     """
     เปิดชีตข้อมูลร้านค้า
