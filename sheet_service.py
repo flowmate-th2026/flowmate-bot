@@ -187,6 +187,73 @@ def get_pending_shops():
 
     return pending_shops
 
+def activate_shop(
+    shop_id,
+    sheet_id,
+):
+    """
+    เปิดใช้งานร้านโดยใส่ Sheet ID
+    และเปลี่ยนสถานะเป็น active
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    target_shop_id = str(shop_id).strip().upper()
+    target_sheet_id = str(sheet_id).strip()
+
+    if not target_shop_id:
+        return {
+            "success": False,
+            "reason": "missing_shop_id",
+        }
+
+    if not target_sheet_id:
+        return {
+            "success": False,
+            "reason": "missing_sheet_id",
+        }
+
+    for row_index, row in enumerate(
+        records,
+        start=2,
+    ):
+        current_shop_id = str(
+            row.get("shop_id", "")
+        ).strip().upper()
+
+        if current_shop_id == target_shop_id:
+            shop_name = str(
+                row.get("shop_name", "")
+            ).strip()
+
+            worksheet.update_cell(
+                row_index,
+                4,
+                target_sheet_id,
+            )
+
+            worksheet.update_cell(
+                row_index,
+                5,
+                "active",
+            )
+
+            return {
+                "success": True,
+                "reason": "activated",
+                "shop_id": target_shop_id,
+                "shop_name": shop_name,
+                "sheet_id": target_sheet_id,
+                "status": "active",
+            }
+
+    return {
+        "success": False,
+        "reason": "shop_not_found",
+        "shop_id": target_shop_id,
+    }
+
 def get_sales_worksheet(sheet_id=None):
     """
     เปิดชีตข้อมูลร้านค้า
