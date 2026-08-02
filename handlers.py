@@ -120,12 +120,10 @@ def handle_text_message(event, line_bot_api):
         elif normalized_message.startswith("ยอดขาย "):
             line_user_id = event.source.user_id
             shop = get_shop_by_line_user_id(line_user_id)
+            access_message = get_shop_access_message(shop)
 
-            if not shop:
-                reply = (
-                    "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
-                    "กรุณาติดต่อผู้ดูแล FlowMate"
-                )
+            if access_message:
+                reply = access_message
             else:
                 reply = handle_sales_message(
                     user_message,
