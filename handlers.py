@@ -14,7 +14,7 @@ from product_handler import (
 from report_handler import handle_report_message
 from sales_handler import handle_sales_message
 from sheet_service import get_shop_by_line_user_id
-
+from register_handler import handle_register_shop_message
 
 def handle_text_message(event, line_bot_api):
     """
@@ -41,6 +41,16 @@ def handle_text_message(event, line_bot_api):
             "บันทึกสินค้าที่ขาย",
         ]:
             reply = handle_menu_message(normalized_message)
+            elif (
+                normalized_message == "ลงทะเบียนร้าน"
+                or normalized_message.startswith("ลงทะเบียนร้าน ")
+            ):
+                line_user_id = event.source.user_id
+
+                reply = handle_register_shop_message(
+                    user_message=user_message,
+                    line_user_id=line_user_id,
+                )
 
         elif normalized_message in [
             "ไอดีร้าน",
