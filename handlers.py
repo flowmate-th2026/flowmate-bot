@@ -41,16 +41,16 @@ def handle_text_message(event, line_bot_api):
             "บันทึกสินค้าที่ขาย",
         ]:
             reply = handle_menu_message(normalized_message)
-            elif (
-                normalized_message == "ลงทะเบียนร้าน"
-                or normalized_message.startswith("ลงทะเบียนร้าน ")
-            ):
-                line_user_id = event.source.user_id
+        elif (
+            normalized_message == "ลงทะเบียนร้าน"
+            or normalized_message.startswith("ลงทะเบียนร้าน ")
+        ):
+            line_user_id = event.source.user_id
 
-                reply = handle_register_shop_message(
-                    user_message=user_message,
-                    line_user_id=line_user_id,
-                )
+            reply = handle_register_shop_message(
+                user_message=user_message,
+                line_user_id=line_user_id,
+            )
 
         elif normalized_message in [
             "ไอดีร้าน",
