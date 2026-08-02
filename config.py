@@ -9,3 +9,4 @@ CHANNEL_SECRET = os.getenv("CHANNEL_SECRET")
 
 GOOGLE_SHEET_ID = os.getenv("GOOGLE_SHEET_ID")
 GOOGLE_CREDENTIALS_FILE = "/etc/secrets/google-credentials.json"
+ADMIN_LINE_USER_ID = os.getenv("ADMIN_LINE_USER_ID", "")
