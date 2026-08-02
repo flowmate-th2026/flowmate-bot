@@ -15,6 +15,7 @@ from report_handler import handle_report_message
 from sales_handler import handle_sales_message
 from sheet_service import get_shop_by_line_user_id
 from register_handler import handle_register_shop_message
+from admin_handler import handle_pending_shops_message
 
 def get_shop_access_message(shop):
     """
@@ -84,6 +85,14 @@ def handle_text_message(event, line_bot_api):
             "บันทึกสินค้าที่ขาย",
         ]:
             reply = handle_menu_message(normalized_message)
+
+        elif normalized_message in [
+            "ร้านรอเปิดใช้งาน",
+            "ร้าน pending",
+            "pending shops",
+        ]:
+            reply = handle_pending_shops_message()
+        
         elif (
             normalized_message == "ลงทะเบียนร้าน"
             or normalized_message.startswith("ลงทะเบียนร้าน ")
