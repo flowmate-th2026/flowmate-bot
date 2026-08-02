@@ -16,6 +16,49 @@ from sales_handler import handle_sales_message
 from sheet_service import get_shop_by_line_user_id
 from register_handler import handle_register_shop_message
 
+def get_shop_access_message(shop):
+    """
+    ตรวจสถานะร้านก่อนอนุญาตให้ใช้งานระบบ
+    """
+
+    if not shop:
+        return (
+            "❌ ยังไม่พบข้อมูลร้านของคุณในระบบ\n\n"
+            "พิมพ์ “ลงทะเบียนร้าน ชื่อร้าน” เพื่อส่งคำขอ"
+        )
+
+    status = shop.get("status", "")
+    sheet_id = shop.get("sheet_id", "")
+
+    if status == "pending":
+        return (
+            "⏳ ร้านของคุณกำลังรอตรวจสอบ\n\n"
+            f"รหัสร้าน: {shop.get('shop_id', '-')}\n"
+            f"ชื่อร้าน: {shop.get('shop_name', '-')}\n\n"
+            "ผู้ดูแลจะเปิดใช้งานให้ภายหลังค่ะ"
+        )
+
+    if status == "inactive":
+        return (
+            "⛔ ร้านนี้ถูกระงับการใช้งานชั่วคราว\n\n"
+            "กรุณาติดต่อผู้ดูแล FlowMate"
+        )
+
+    if status != "active":
+        return (
+            "⚠️ สถานะร้านไม่ถูกต้อง\n\n"
+            "กรุณาติดต่อผู้ดูแล FlowMate"
+        )
+
+    if not sheet_id:
+        return (
+            "⚠️ ร้านเปิดใช้งานแล้ว แต่ยังไม่ได้เชื่อม Google Sheets\n\n"
+            "กรุณาติดต่อผู้ดูแล FlowMate"
+        )
+
+    return None
+
+
 def handle_text_message(event, line_bot_api):
     """
     รับข้อความจาก LINE แล้วส่งต่อไปยัง handler ที่เกี่ยวข้อง
