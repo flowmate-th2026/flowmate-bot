@@ -16,6 +16,7 @@ from sales_handler import handle_sales_message
 from sheet_service import get_shop_by_line_user_id
 from register_handler import handle_register_shop_message
 from admin_handler import handle_pending_shops_message
+from config import ADMIN_LINE_USER_ID
 
 def get_shop_access_message(shop):
     """
@@ -91,7 +92,14 @@ def handle_text_message(event, line_bot_api):
             "ร้าน pending",
             "pending shops",
         ]:
-            reply = handle_pending_shops_message()
+            line_user_id = event.source.user_id
+
+            if line_user_id != ADMIN_LINE_USER_ID:
+                reply = (
+                    "⛔ คำสั่งนี้ใช้ได้เฉพาะผู้ดูแลระบบ"
+                )
+            else:
+                reply = handle_pending_shops_message()
         
         elif (
             normalized_message == "ลงทะเบียนร้าน"
