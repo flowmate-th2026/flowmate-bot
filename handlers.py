@@ -20,6 +20,9 @@ from admin_handler import (
     handle_pending_shops_message,
 )
 from config import ADMIN_LINE_USER_ID
+from datetime import datetime
+
+from services import get_thailand_time
 
 def get_shop_access_message(shop):
     """
@@ -61,6 +64,32 @@ def get_shop_access_message(shop):
             "กรุณาติดต่อผู้ดูแล FlowMate"
         )
 
+    trial_end_text = str(
+        shop.get("trial_end", "")
+    ).strip()
+
+    if trial_end_text:
+        try:
+            trial_end = datetime.strptime(
+                trial_end_text,
+                "%d/%m/%Y",
+            ).date()
+
+            today = get_thailand_time().date()
+
+            if today > trial_end:
+                return (
+                    "⏰ ระยะเวลาทดลองใช้ของร้านหมดแล้ว\n\n"
+                    f"หมดอายุวันที่: {trial_end_text}\n\n"
+                    "กรุณาติดต่อผู้ดูแล RooYod "
+                    "เพื่อต่ออายุการใช้งาน"
+                )
+
+        except ValueError:
+            return (
+                "⚠️ รูปแบบวันหมดอายุของร้านไม่ถูกต้อง\n\n"
+                "กรุณาติดต่อผู้ดูแล RooYod"
+            )
     return None
 
 
