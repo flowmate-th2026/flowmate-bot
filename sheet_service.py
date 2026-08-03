@@ -59,6 +59,12 @@ def get_shop_by_line_user_id(line_user_id):
                 "status": str(
                     row.get("status", "")
                 ).strip().lower(),
+                "trial_start": str(
+                    row.get("trial_start", "")
+                ).strip(),
+                "trial_end": str(
+                    row.get("trial_end", "")
+                ).strip(),
             }
 
     return None
