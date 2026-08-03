@@ -23,6 +23,7 @@ from config import ADMIN_LINE_USER_ID
 from datetime import datetime
 
 from services import get_thailand_time
+from trial_handler import handle_trial_status_message
 
 def get_shop_access_message(shop):
     """
@@ -176,9 +177,18 @@ def handle_text_message(event, line_bot_api):
                 )
             else:
                 reply = (
-                    "❌ ยังไม่พบข้อมูลร้านนี้ในระบบ\n\n"
-                    f"LINE User ID:\n{line_user_id}"
+                    "❌ ยังไม่พบข้อมูลร้านนี้ในระบบ"
                 )
+
+        elif normalized_message in [
+            "สถานะทดลองใช้",
+            "ทดลองใช้",
+            "trial status",
+        ]:
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            reply = handle_trial_status_message(shop)
         
         # บันทึกยอดขาย เช่น ยอดขาย 2500
         elif normalized_message.startswith("ยอดขาย "):
