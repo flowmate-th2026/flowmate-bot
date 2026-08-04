@@ -66,6 +66,7 @@ def handle_trial_status_message(shop):
             f"เริ่มทดลอง: {trial_start_text or '-'}\n"
             f"หมดอายุ: {trial_end_text}\n"
             f"เหลืออีก: {days_text}\n"
+            f"แพ็กเกจ: {shop.get('plan_name', '-') or '-'}\n"
             f"สถานะ: {status_text}"
         )
 
