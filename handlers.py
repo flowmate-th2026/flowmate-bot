@@ -18,6 +18,7 @@ from register_handler import handle_register_shop_message
 from admin_handler import (
     handle_activate_shop_message,
     handle_pending_shops_message,
+    handle_renew_shop_message,
 )
 from config import ADMIN_LINE_USER_ID
 from datetime import datetime
@@ -146,6 +147,20 @@ def handle_text_message(event, line_bot_api):
                 )
             else:
                 reply = handle_activate_shop_message(
+                    user_message
+                )
+        elif (
+            normalized_message == "ต่ออายุ"
+            or normalized_message.startswith("ต่ออายุ ")
+        ):
+            line_user_id = event.source.user_id
+
+            if line_user_id != ADMIN_LINE_USER_ID:
+                reply = (
+                    "⛔ คำสั่งนี้ใช้ได้เฉพาะผู้ดูแลระบบ"
+                )
+            else:
+                reply = handle_renew_shop_message(
                     user_message
                 )
         
