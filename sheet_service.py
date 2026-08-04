@@ -65,6 +65,9 @@ def get_shop_by_line_user_id(line_user_id):
                 "trial_end": str(
                     row.get("trial_end", "")
                 ).strip(),
+                "plan_name": str(
+                row.get("plan_name", "")
+                ).strip(),
             }
 
     return None
