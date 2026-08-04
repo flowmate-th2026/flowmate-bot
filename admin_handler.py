@@ -1,6 +1,71 @@
-from sheet_service import activate_shop, get_pending_shops
+from sheet_service import (
+    activate_shop,
+    get_pending_shops,
+    renew_shop_plan,
+)
 
+def handle_renew_shop_message(user_message):
+    """
+    ต่ออายุสิทธิ์ใช้งานร้าน
 
+    ตัวอย่าง:
+    ต่ออายุ SHOP001 30 Basic
+    """
+
+    command_parts = user_message.split(maxsplit=3)
+
+    if len(command_parts) < 4:
+        return (
+            "💳 รูปแบบคำสั่งต่ออายุไม่ถูกต้อง\n\n"
+            "กรุณาพิมพ์:\n"
+            "ต่ออายุ SHOP001 30 Basic"
+        )
+
+    shop_id = command_parts[1].strip()
+    days = command_parts[2].strip()
+    plan_name = command_parts[3].strip()
+
+    result = renew_shop_plan(
+        shop_id=shop_id,
+        days=days,
+        plan_name=plan_name,
+    )
+
+    if result["success"]:
+        return (
+            "✅ ต่ออายุร้านเรียบร้อยแล้ว\n\n"
+            f"รหัสร้าน: {result['shop_id']}\n"
+            f"ชื่อร้าน: {result['shop_name']}\n"
+            f"แพ็กเกจ: {result['plan_name']}\n"
+            f"เพิ่มวันใช้งาน: {result['days_added']} วัน\n"
+            f"หมดอายุใหม่: {result['new_end_date']}\n"
+            "สถานะ: active"
+        )
+
+    reason = result.get("reason", "")
+
+    if reason == "shop_not_found":
+        return (
+            "❌ ไม่พบรหัสร้านนี้ในระบบ\n\n"
+            f"รหัสที่ค้นหา: {result.get('shop_id', '-')}"
+        )
+
+    if reason == "invalid_days":
+        return (
+            "❌ จำนวนวันต่ออายุไม่ถูกต้อง\n\n"
+            "กรุณาใส่จำนวนเต็มมากกว่า 0"
+        )
+
+    if reason == "missing_plan_name":
+        return (
+            "❌ กรุณาระบุชื่อแพ็กเกจ"
+        )
+
+    return (
+        "⚠️ ระบบยังต่ออายุร้านไม่ได้ในขณะนี้\n\n"
+        "กรุณาตรวจข้อมูลแล้วลองอีกครั้ง"
+    )
+    
 def handle_pending_shops_message():
     """
     แสดงรายการร้านที่รอเปิดใช้งาน
