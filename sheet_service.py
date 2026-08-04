@@ -1,8 +1,8 @@
-from datetime import datetime
 import gspread
 import os
 
 from config import GOOGLE_CREDENTIALS_FILE, GOOGLE_SHEET_ID
+from datetime import datetime, timedelta
 
 def get_registry_worksheet():
     """
@@ -256,6 +256,118 @@ def activate_shop(
                 "sheet_id": target_sheet_id,
                 "status": "active",
             }
+
+    return {
+        "success": False,
+        "reason": "shop_not_found",
+        "shop_id": target_shop_id,
+    }
+
+def renew_shop_plan(
+    shop_id,
+    days,
+    plan_name,
+):
+    """
+    ต่ออายุสิทธิ์ใช้งานร้าน และเปลี่ยนชื่อแพ็กเกจ
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    target_shop_id = str(shop_id).strip().upper()
+    cleaned_plan_name = str(plan_name).strip()
+
+    try:
+        renewal_days = int(days)
+    except (ValueError, TypeError):
+        return {
+            "success": False,
+            "reason": "invalid_days",
+        }
+
+    if renewal_days <= 0:
+        return {
+            "success": False,
+            "reason": "invalid_days",
+        }
+
+    if not cleaned_plan_name:
+        return {
+            "success": False,
+            "reason": "missing_plan_name",
+        }
+
+    today = get_thailand_time().date()
+
+    for row_index, row in enumerate(
+        records,
+        start=2,
+    ):
+        current_shop_id = str(
+            row.get("shop_id", "")
+        ).strip().upper()
+
+        if current_shop_id != target_shop_id:
+            continue
+
+        shop_name = str(
+            row.get("shop_name", "")
+        ).strip()
+
+        current_end_text = str(
+            row.get("trial_end", "")
+        ).strip()
+
+        try:
+            current_end = datetime.strptime(
+                current_end_text,
+                "%d/%m/%Y",
+            ).date()
+        except ValueError:
+            current_end = today
+
+        base_date = max(
+            today,
+            current_end,
+        )
+
+        new_end_date = base_date + timedelta(
+            days=renewal_days
+        )
+
+        new_end_text = new_end_date.strftime(
+            "%d/%m/%Y"
+        )
+
+        worksheet.update_cell(
+            row_index,
+            7,
+            new_end_text,
+        )
+
+        worksheet.update_cell(
+            row_index,
+            8,
+            cleaned_plan_name,
+        )
+
+        worksheet.update_cell(
+            row_index,
+            5,
+            "active",
+        )
+
+        return {
+            "success": True,
+            "reason": "renewed",
+            "shop_id": target_shop_id,
+            "shop_name": shop_name,
+            "plan_name": cleaned_plan_name,
+            "days_added": renewal_days,
+            "new_end_date": new_end_text,
+            "status": "active",
+        }
 
     return {
         "success": False,
