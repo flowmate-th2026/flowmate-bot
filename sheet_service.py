@@ -3,6 +3,7 @@ import os
 
 from config import GOOGLE_CREDENTIALS_FILE, GOOGLE_SHEET_ID
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 def get_registry_worksheet():
     """
@@ -298,7 +299,9 @@ def renew_shop_plan(
             "reason": "missing_plan_name",
         }
 
-    today = get_thailand_time().date()
+        today = datetime.now(
+            ZoneInfo("Asia/Bangkok")
+        ).date()
 
     for row_index, row in enumerate(
         records,
