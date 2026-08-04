@@ -299,9 +299,9 @@ def renew_shop_plan(
             "reason": "missing_plan_name",
         }
 
-        today = datetime.now(
-            ZoneInfo("Asia/Bangkok")
-        ).date()
+    today = datetime.now(
+        ZoneInfo("Asia/Bangkok")
+    ).date()
 
     for row_index, row in enumerate(
         records,
