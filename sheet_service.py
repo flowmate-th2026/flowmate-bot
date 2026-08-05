@@ -639,3 +639,12 @@ def get_shop_spreadsheet(sheet_id):
     )
 
     return google_client.open_by_key(sheet_id)
+
+def get_shop_sales_worksheet(sheet_id):
+    """
+    เปิดชีต Sales ของร้าน
+    """
+
+    spreadsheet = get_shop_spreadsheet(sheet_id)
+
+    return spreadsheet.worksheet("Sales")
