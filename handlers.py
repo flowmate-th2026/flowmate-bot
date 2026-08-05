@@ -25,7 +25,10 @@ from datetime import datetime
 
 from services import get_thailand_time
 from trial_handler import handle_trial_status_message
-from profile_handler import handle_shop_profile_message
+from profile_handler import (
+    handle_shop_profile_message,
+    handle_update_shop_profile_message,
+)
 
 def get_shop_access_message(shop):
     """
@@ -205,6 +208,29 @@ def handle_text_message(event, line_bot_api):
             shop = get_shop_by_line_user_id(line_user_id)
 
             reply = handle_shop_profile_message(shop)
+
+        elif (
+            normalized_message == "แก้ชื่อร้าน"
+            or normalized_message.startswith("แก้ชื่อร้าน ")
+            or normalized_message == "แก้ประเภทธุรกิจ"
+            or normalized_message.startswith("แก้ประเภทธุรกิจ ")
+            or normalized_message == "แก้จังหวัด"
+            or normalized_message.startswith("แก้จังหวัด ")
+            or normalized_message == "แก้ผู้ติดต่อ"
+            or normalized_message.startswith("แก้ผู้ติดต่อ ")
+        ):
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+            access_message = get_shop_access_message(shop)
+
+            if access_message:
+                reply = access_message
+            else:
+                reply = handle_update_shop_profile_message(
+                    user_message=user_message,
+                    line_user_id=line_user_id,
+                )
+
         
         elif normalized_message in [
             "สถานะทดลองใช้",
