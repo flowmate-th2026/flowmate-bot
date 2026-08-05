@@ -69,6 +69,15 @@ def get_shop_by_line_user_id(line_user_id):
                 "plan_name": str(
                 row.get("plan_name", "")
                 ).strip(),
+                "business_type": str(
+                    row.get("business_type", "")
+                ).strip(),
+                "province": str(
+                    row.get("province", "")
+                ).strip(),
+                "contact_name": str(
+                    row.get("contact_name", "")
+                ).strip(),
             }
 
     return None
