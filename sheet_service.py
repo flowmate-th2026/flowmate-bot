@@ -657,3 +657,12 @@ def get_shop_expense_worksheet(sheet_id):
     spreadsheet = get_shop_spreadsheet(sheet_id)
 
     return spreadsheet.worksheet("Expense")
+
+def get_shop_customer_worksheet(sheet_id):
+    """
+    เปิดชีต Customer ของร้าน
+    """
+
+    spreadsheet = get_shop_spreadsheet(sheet_id)
+
+    return spreadsheet.worksheet("Customer")
