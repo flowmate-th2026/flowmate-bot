@@ -628,3 +628,14 @@ def get_rows_by_date_range(
             rows_in_range.append(row)
 
     return rows_in_range   
+
+def get_shop_spreadsheet(sheet_id):
+    """
+    เปิด Google Spreadsheet ของแต่ละร้าน
+    """
+
+    google_client = gspread.service_account(
+        filename=GOOGLE_CREDENTIALS_FILE
+    )
+
+    return google_client.open_by_key(sheet_id)
