@@ -25,6 +25,7 @@ from datetime import datetime
 
 from services import get_thailand_time
 from trial_handler import handle_trial_status_message
+from profile_handler import handle_shop_profile_message
 
 def get_shop_access_message(shop):
     """
@@ -195,6 +196,16 @@ def handle_text_message(event, line_bot_api):
                     "❌ ยังไม่พบข้อมูลร้านนี้ในระบบ"
                 )
 
+        elif normalized_message in [
+            "โปรไฟล์ร้าน",
+            "ข้อมูลร้าน",
+            "shop profile",
+        ]:
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            reply = handle_shop_profile_message(shop)
+        
         elif normalized_message in [
             "สถานะทดลองใช้",
             "ทดลองใช้",
