@@ -387,6 +387,79 @@ def renew_shop_plan(
         "shop_id": target_shop_id,
     }
 
+def update_shop_profile(
+    line_user_id,
+    field_name,
+    new_value,
+):
+    """
+    แก้ไขข้อมูลโปรไฟล์ร้านตาม LINE User ID
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    target_line_user_id = str(
+        line_user_id
+    ).strip()
+
+    cleaned_value = str(
+        new_value
+    ).strip()
+
+    field_columns = {
+        "shop_name": 2,
+        "business_type": 9,
+        "province": 10,
+        "contact_name": 11,
+    }
+
+    if field_name not in field_columns:
+        return {
+            "success": False,
+            "reason": "invalid_field",
+        }
+
+    if not cleaned_value:
+        return {
+            "success": False,
+            "reason": "missing_value",
+        }
+
+    for row_index, row in enumerate(
+        records,
+        start=2,
+    ):
+        current_line_user_id = str(
+            row.get("line_user_id", "")
+        ).strip()
+
+        if current_line_user_id != target_line_user_id:
+            continue
+
+        column_index = field_columns[field_name]
+
+        worksheet.update_cell(
+            row_index,
+            column_index,
+            cleaned_value,
+        )
+
+        return {
+            "success": True,
+            "reason": "updated",
+            "shop_id": str(
+                row.get("shop_id", "")
+            ).strip(),
+            "field_name": field_name,
+            "new_value": cleaned_value,
+        }
+
+    return {
+        "success": False,
+        "reason": "shop_not_found",
+    }
+
 def get_sales_worksheet(sheet_id=None):
     """
     เปิดชีตข้อมูลร้านค้า
