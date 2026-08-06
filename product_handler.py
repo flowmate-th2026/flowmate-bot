@@ -1,5 +1,8 @@
 from services import record_product
-
+from sheet_service import (
+    get_product_rows_by_date,
+    get_top_products_data,
+)
 
 def handle_product_message(
     user_message,
