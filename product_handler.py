@@ -1,5 +1,13 @@
-from services import record_product
+from collections import defaultdict
+
+from services import get_thailand_time, record_product
 from sheet_service import get_product_rows_by_date
+
+
+def handle_product_message(
+    user_message,
+    sheet_id=None,
+):
     """
     ตรวจสอบและบันทึกสินค้าที่ขาย
 
@@ -78,20 +86,16 @@ from sheet_service import get_product_rows_by_date
         )
 
     except Exception as error:
-            print(
-                f"เกิดข้อผิดพลาดใน product_handler.py: {repr(error)}",
-                flush=True,
-            )
+        print(
+            f"เกิดข้อผิดพลาดใน product_handler.py: {repr(error)}",
+            flush=True,
+        )
 
-            return (
-                "⚠️ ระบบยังบันทึกสินค้าไม่ได้ในขณะนี้\n\n"
-                "กรุณาลองใหม่อีกครั้ง"
-            )
-        
-from collections import defaultdict
+        return (
+            "⚠️ ระบบยังบันทึกสินค้าไม่ได้ในขณะนี้\n\n"
+            "กรุณาลองใหม่อีกครั้ง"
+        )
 
-from sheet_service import get_shop_product_rows_by_date
-from services import get_thailand_time
 
 def get_top_products_data(
     date_text,
@@ -100,18 +104,9 @@ def get_top_products_data(
 ):
     """
     คืนข้อมูลสินค้าขายดีตามวันที่
-
-    ตัวอย่างผลลัพธ์:
-    [
-        {
-            "name": "ชาไทย",
-            "quantity": 5,
-            "amount": 250.0,
-        }
-    ]
     """
 
-    product_rows = get_shop_product_rows_by_date(
+    product_rows = get_product_rows_by_date(
         date_text,
         sheet_id=sheet_id,
     )
@@ -128,17 +123,26 @@ def get_top_products_data(
             row.get("ชื่อสินค้า", "")
         ).strip()
 
+        quantity_value = (
+            row.get("จำนวนขาย")
+            or row.get("จำนวน")
+            or 0
+        )
+
+        amount_value = (
+            row.get("จำนวนเงิน")
+            or row.get("ยอดขายรวม")
+            or row.get("ยอดขาย")
+            or 0
+        )
+
         try:
-            quantity = int(
-                float(row.get("จำนวนขาย", 0) or 0)
-            )
+            quantity = int(float(quantity_value))
         except (ValueError, TypeError):
             quantity = 0
 
         try:
-            amount = float(
-                row.get("จำนวนเงิน", 0) or 0
-            )
+            amount = float(amount_value)
         except (ValueError, TypeError):
             amount = 0.0
 
@@ -168,6 +172,7 @@ def get_top_products_data(
 
     return top_products
 
+
 def handle_top_products_message(
     sheet_id=None,
 ):
@@ -180,6 +185,12 @@ def handle_top_products_message(
 
     product_rows = get_product_rows_by_date(
         date_text,
+        sheet_id=sheet_id,
+    )
+
+    top_products = get_top_products_data(
+        date_text=date_text,
+        limit=3,
         sheet_id=sheet_id,
     )
 
@@ -209,17 +220,26 @@ def handle_top_products_message(
     total_amount = 0.0
 
     for row in product_rows:
+        quantity_value = (
+            row.get("จำนวนขาย")
+            or row.get("จำนวน")
+            or 0
+        )
+
+        amount_value = (
+            row.get("จำนวนเงิน")
+            or row.get("ยอดขายรวม")
+            or row.get("ยอดขาย")
+            or 0
+        )
+
         try:
-            quantity = int(
-                float(row.get("จำนวนขาย", 0) or 0)
-            )
+            quantity = int(float(quantity_value))
         except (ValueError, TypeError):
             quantity = 0
 
         try:
-            amount = float(
-                row.get("จำนวนเงิน", 0) or 0
-            )
+            amount = float(amount_value)
         except (ValueError, TypeError):
             amount = 0.0
 
