@@ -353,9 +353,17 @@ def handle_text_message(event, line_bot_api):
             if access_message:
                 reply = access_message
             else:
-                reply = handle_monthly_report_message(
-                    sheet_id=shop["sheet_id"],
+                feature_message = get_feature_access_message(
+                    plan_name=shop.get("plan_name", ""),
+                    feature_name="monthly_report",
                 )
+
+                if feature_message:
+                    reply = feature_message
+                else:
+                    reply = handle_monthly_report_message(
+                        sheet_id=shop["sheet_id"],
+                    )
 
         # รายงานประจำวัน
         elif normalized_message in [
