@@ -29,6 +29,7 @@ from profile_handler import (
     handle_shop_profile_message,
     handle_update_shop_profile_message,
 )
+from plan_service import get_feature_access_message
 
 def get_shop_access_message(shop):
     """
@@ -325,12 +326,20 @@ def handle_text_message(event, line_bot_api):
             shop = get_shop_by_line_user_id(line_user_id)
             access_message = get_shop_access_message(shop)
 
-            if access_message:
+        if access_message:
                 reply = access_message
             else:
-                reply = handle_weekly_report_message(
-                    sheet_id=shop["sheet_id"],
+                feature_message = get_feature_access_message(
+                    plan_name=shop.get("plan_name", ""),
+                    feature_name="weekly_report",
                 )
+
+                if feature_message:
+                    reply = feature_message
+                else:
+                    reply = handle_weekly_report_message(
+                        sheet_id=shop["sheet_id"],
+                    )
 
         # รายงานประจำเดือน
         elif normalized_message in [
