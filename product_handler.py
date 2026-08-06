@@ -173,7 +173,9 @@ def get_top_products_data(
 
     return top_products
 
-def handle_top_products_message():
+def handle_top_products_message(
+    sheet_id=None,
+):
     """
     สรุปสินค้าขายดี Top 3 ของวันนี้
     """
@@ -181,8 +183,15 @@ def handle_top_products_message():
     now = get_thailand_time()
     date_text = now.strftime("%d/%m/%Y")
 
-    product_rows = get_product_rows_by_date(date_text)
-    top_products = get_top_products_data(date_text, limit=3)
+    product_rows = get_product_rows_by_date(
+        date_text,
+        sheet_id=sheet_id,
+    )
+    top_products = get_top_products_data(
+        date_text,
+        limit=3,
+        sheet_id=sheet_id,
+    )
 
     if not top_products:
         return (
