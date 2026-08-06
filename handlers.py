@@ -264,7 +264,24 @@ def handle_text_message(event, line_bot_api):
             "top 3",
             "top3",
         ]:
-            reply = handle_top_products_message()
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+            access_message = get_shop_access_message(shop)
+
+            if access_message:
+                reply = access_message
+            else:
+                feature_message = get_feature_access_message(
+                    plan_name=shop.get("plan_name", ""),
+                    feature_name="top_products",
+                )
+
+                if feature_message:
+                    reply = feature_message
+                else:
+                    reply = handle_top_products_message(
+                        sheet_id=shop["sheet_id"],
+                    )
             
         # บันทึกสินค้าที่ขาย เช่น ขาย มัทฉะลาเต้ 2 110
         elif (
