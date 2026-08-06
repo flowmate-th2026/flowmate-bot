@@ -326,7 +326,7 @@ def handle_text_message(event, line_bot_api):
             shop = get_shop_by_line_user_id(line_user_id)
             access_message = get_shop_access_message(shop)
 
-        if access_message:
+            if access_message:
                 reply = access_message
             else:
                 feature_message = get_feature_access_message(
