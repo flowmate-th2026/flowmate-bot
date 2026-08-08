@@ -25,7 +25,11 @@
     <div class="brand-area">
 
         <div class="brand-badge">
-            R
+            <img
+                src="assets/rooyod-logo.jpg"
+                alt="RooYod Logo"
+                class="brand-logo"
+            >
         </div>
 
         <div>
@@ -41,8 +45,12 @@
     </div>
 
     <button class="profile-button">
-        🤖
-    </button>
+    <img
+        src="assets/rooyod-mascot.jpg"
+        alt="RooYod Mascot"
+        class="mascot-image"
+    >
+</button>
 
 </header>
 
@@ -188,95 +196,247 @@
         </section>
 
 
-        <section class="section">
+        <section class="section quick-section">
 
             <div class="section-header">
-                <h2>บันทึกด่วน</h2>
+                <div>
+                    <h2>บันทึกด่วน</h2>
+                    <p class="section-description">
+                        เลือกรายการที่ต้องการบันทึก
+                    </p>
+                </div>
                 <span>Quick Record</span>
             </div>
 
+
             <div class="quick-grid">
 
-                <button class="quick-button">
-                    <span>💰</span>
-                    <span>ยอดขาย</span>
+                <button class="quick-button quick-sales">
+
+                    <div class="quick-icon-wrap">
+                        💰
+                    </div>
+
+                    <div class="quick-content">
+                        <strong>ยอดขาย</strong>
+                        <small>บันทึกรายรับ</small>
+                    </div>
+
+                    <span class="quick-arrow">
+                        ›
+                    </span>
+
                 </button>
 
-                <button class="quick-button">
-                    <span>💸</span>
-                    <span>ค่าใช้จ่าย</span>
+
+                <button class="quick-button quick-expense">
+
+                    <div class="quick-icon-wrap">
+                        💸
+                    </div>
+
+                    <div class="quick-content">
+                        <strong>ค่าใช้จ่าย</strong>
+                        <small>บันทึกรายจ่าย</small>
+                    </div>
+
+                    <span class="quick-arrow">
+                        ›
+                    </span>
+
                 </button>
 
-                <button class="quick-button">
-                    <span>👥</span>
-                    <span>ลูกค้า</span>
-                </button>
 
-                <button class="quick-button">
-                    <span>📦</span>
-                    <span>สินค้า</span>
-                </button>
+        <button class="quick-button quick-customer">
 
+            <div class="quick-icon-wrap">
+                👥
             </div>
 
-        </section>
-
-
-        <section class="section">
-
-            <div class="section-header">
-                <h2>รายงาน</h2>
-                <span>ดูทั้งหมด</span>
+            <div class="quick-content">
+                <strong>ลูกค้า</strong>
+                <small>เพิ่มจำนวนลูกค้า</small>
             </div>
 
-            <div class="report-card">
+            <span class="quick-arrow">
+                ›
+            </span>
 
-                <div class="report-icon">
-                    📊
-                </div>
+        </button>
 
-                <div>
-                    <h3>รายงานวันนี้</h3>
-                    <p>
-                        ดูยอดขาย ค่าใช้จ่าย กำไร และลูกค้า
-                    </p>
-                </div>
 
-                <div class="arrow">
-                    ›
-                </div>
+        <button class="quick-button quick-product">
 
+            <div class="quick-icon-wrap">
+                📦
             </div>
 
-        </section>
-
-
-        <section class="section">
-
-            <div class="section-header">
-                <h2>สินค้าขายดี</h2>
-                <span>วันนี้</span>
+            <div class="quick-content">
+                <strong>สินค้า</strong>
+                <small>บันทึกสินค้าที่ขาย</small>
             </div>
 
-            <div class="empty-card">
+            <span class="quick-arrow">
+                ›
+            </span>
 
-                <div class="empty-icon">
-                    🏆
-                </div>
-
-                <h3>ยังไม่มีข้อมูลสินค้า</h3>
-
-                <p>
-                    เมื่อเริ่มบันทึกยอดขายสินค้า
-                    RooYod จะแสดงสินค้าขายดีที่นี่
-                </p>
-
-            </div>
-
-        </section>
+        </button>
 
     </div>
 
+</section>
+
+
+        <section class="section report-section">
+
+            <div class="section-header">
+                <div>
+                    <h2>รายงาน</h2>
+                    <p class="section-description">
+                        สรุปผลการขายของร้าน
+                    </p>
+                </div>
+                <span>ดูทั้งหมด</span>
+            </div>
+
+
+            <div class="report-list">
+
+                <button class="report-item">
+
+                    <div class="report-icon-wrap">
+                        📊
+                    </div>
+
+                    <div class="report-info">
+                        <strong>รายงานวันนี้</strong>
+                        <small>
+                            ดูยอดขาย ค่าใช้จ่าย กำไร และลูกค้า
+                        </small>
+                    </div>
+
+                    <span class="report-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button class="report-item">
+
+                    <div class="report-icon-wrap">
+                        📅
+                    </div>
+
+                    <div class="report-info">
+                        <strong>รายงานสัปดาห์นี้</strong>
+                        <small>
+                            ดูภาพรวมยอดขายตลอด 7 วัน
+                        </small>
+                    </div>
+
+                    <span class="report-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <button class="report-item">
+
+                    <div class="report-icon-wrap">
+                        📈
+                    </div>
+
+                    <div class="report-info">
+                        <strong>รายงานเดือนนี้</strong>
+                        <small>
+                            สรุปยอดขายและกำไรประจำเดือน
+                        </small>
+                    </div>
+
+                    <span class="report-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+<section class="section top-products-section">
+
+    <div class="section-header">
+        <div>
+            <h2>สินค้าขายดี</h2>
+            <p class="section-description">
+                อันดับสินค้าที่ขายดีที่สุดวันนี้
+            </p>
+        </div>
+
+        <span>วันนี้</span>
+    </div>
+
+
+    <div class="top-products-list">
+
+        <div class="product-rank-item">
+
+            <div class="rank-number gold">
+                1
+            </div>
+
+            <div class="product-info">
+                <strong>ยังไม่มีข้อมูลสินค้า</strong>
+                <small>0 รายการ</small>
+            </div>
+
+            <div class="product-amount">
+                ฿0
+            </div>
+
+        </div>
+
+
+        <div class="product-rank-item">
+
+            <div class="rank-number silver">
+                2
+            </div>
+
+            <div class="product-info">
+                <strong>ยังไม่มีข้อมูลสินค้า</strong>
+                <small>0 รายการ</small>
+            </div>
+
+            <div class="product-amount">
+                ฿0
+            </div>
+
+        </div>
+
+
+        <div class="product-rank-item">
+
+            <div class="rank-number bronze">
+                3
+            </div>
+
+            <div class="product-info">
+                <strong>ยังไม่มีข้อมูลสินค้า</strong>
+                <small>0 รายการ</small>
+            </div>
+
+            <div class="product-amount">
+                ฿0
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
     <nav class="bottom-nav">
 
