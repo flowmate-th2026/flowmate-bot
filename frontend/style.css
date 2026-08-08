@@ -322,3 +322,186 @@ button {
         border-radius: 22px 22px 0 0;
     }
 }
+/* =========================
+   ROOYOD DASHBOARD V2
+========================= */
+
+.header {
+    margin-bottom: 26px;
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.brand-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        #2878c8,
+        #35b779
+    );
+
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 800;
+
+    box-shadow:
+        0 6px 16px rgba(40, 120, 200, 0.18);
+}
+
+.brand-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: #163a68;
+    line-height: 1.1;
+}
+
+.brand-subtitle {
+    margin-top: 3px;
+    font-size: 10px;
+    color: #7b91aa;
+}
+
+
+/* Welcome */
+
+.welcome-section {
+    margin-bottom: 20px;
+}
+
+.welcome-section .greeting {
+    margin-bottom: 5px;
+}
+
+.welcome-text {
+    margin-top: 6px;
+
+    color: #8292a5;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* KPI */
+
+.summary-card {
+    min-height: 160px;
+    position: relative;
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 9px 24px rgba(30, 58, 95, 0.11);
+}
+
+.card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.card-top .card-icon {
+    margin-bottom: 0;
+}
+
+.card-status {
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    background: #f1f5f9;
+
+    color: #718096;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.card-status.positive {
+    background: #eafaf2;
+    color: #239667;
+}
+
+.card-detail {
+    margin-top: 7px;
+
+    color: #9aa8b7;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+/* Individual KPI identity */
+
+.sales-card {
+    border-top: 3px solid #31a36e;
+}
+
+.expense-card {
+    border-top: 3px solid #ef7e73;
+}
+
+.profit-card {
+    border-top: 3px solid #2878c8;
+}
+
+.customer-card {
+    border-top: 3px solid #8a75ce;
+}
+
+
+.sales-card .card-icon {
+    background: #eafaf2;
+}
+
+.expense-card .card-icon {
+    background: #fff0ee;
+}
+
+.profit-card .card-icon {
+    background: #edf5ff;
+}
+
+.customer-card .card-icon {
+    background: #f3efff;
+}
+
+
+/* Quick record improvement */
+
+.quick-button {
+    min-height: 82px;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.quick-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 20px rgba(30, 58, 95, 0.11);
+}
+
+.quick-button:active {
+    transform: scale(0.97);
+}
