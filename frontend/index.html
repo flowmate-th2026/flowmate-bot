@@ -46,7 +46,7 @@
 
     <button class="profile-button">
     <img
-        src="assets/rooyod-mascot1.jpg"
+        src="assets/rooyod-mascot3.png"
         alt="RooYod Mascot"
         class="mascot-image"
     >
@@ -97,9 +97,7 @@
                     ยอดขาย
                 </p>
 
-                <h2>
-                    ฿0
-                </h2>
+                <h2 id="sales-value">฿0</h2>
 
                 <p class="card-detail">
                     รายได้รวมวันนี้
@@ -126,9 +124,7 @@
                     ค่าใช้จ่าย
                 </p>
 
-                <h2>
-                    ฿0
-                </h2>
+                <h2 id="expense-value">฿0</h2>
 
                 <p class="card-detail">
                     ค่าใช้จ่ายรวม
@@ -155,9 +151,7 @@
                     กำไร
                 </p>
 
-                <h2>
-                    ฿0
-                </h2>
+                <h2 id="profit-value">฿0</h2>
 
                 <p class="card-detail">
                     ยอดขาย - ค่าใช้จ่าย
@@ -183,9 +177,7 @@
                     ลูกค้า
                 </p>
 
-                <h2>
-                    0 คน
-                </h2>
+                <h2 id="customers-value">0 คน</h2>
 
                 <p class="card-detail">
                     จำนวนลูกค้าทั้งหมด
@@ -365,6 +357,27 @@
 
         </section>
 
+<section class="section latest-section">
+
+    <div class="section-header">
+        <div>
+            <h2>รายการล่าสุดวันนี้</h2>
+            <p class="section-description">
+                ความเคลื่อนไหวล่าสุดของร้าน
+            </p>
+        </div>
+
+        <span>วันนี้</span>
+    </div>
+
+    <div id="latest-transactions" class="latest-transactions">
+        <div class="latest-empty">
+            กำลังโหลดข้อมูล...
+        </div>
+    </div>
+
+</section>
+
 <section class="section top-products-section">
 
     <div class="section-header">
@@ -379,7 +392,7 @@
     </div>
 
 
-    <div class="top-products-list">
+    <div class="top-products-list" id="top-products">
 
         <div class="product-rank-item">
 
@@ -438,6 +451,220 @@
 
 </section>
 
+    <div id="record-modal" class="record-modal">
+    <div class="record-modal-card">
+
+        <div class="record-modal-header">
+            <div>
+                <h2>บันทึกรายการ</h2>
+                <p>เลือกรายการที่ต้องการบันทึก</p>
+            </div>
+
+            <button id="close-record-modal" class="modal-close">
+                ✕
+            </button>
+        </div>
+
+        <div class="record-options">
+
+        <button class="record-option" id="sales-record-option">
+            <span>💰</span>
+            <strong>ยอดขาย</strong>
+        </button>
+
+            <button id="product-record-option" class="record-option">
+                <span>🛍️</span>
+                <strong>ขายสินค้า</strong>
+            </button>
+
+            <button id="expense-record-option" class="record-option">
+                <span>💸</span>
+                <strong>ค่าใช้จ่าย</strong>
+            </button>
+
+            <button id="customer-record-option" class="record-option">
+                <span>👥</span>
+                <strong>ลูกค้า</strong>
+            </button>
+
+        </div>
+
+        <div id="sales-form" class="sales-form">
+
+    <div class="sales-form-header">
+        <button id="back-to-record-options" class="form-back">
+            ←
+        </button>
+
+        <div>
+            <h2>บันทึกยอดขาย</h2>
+            <p>กรอกยอดขายที่ต้องการบันทึก</p>
+        </div>
+    </div>
+
+    <label class="form-label" for="sales-amount">
+        จำนวนเงิน
+    </label>
+
+    <div class="amount-input-wrap">
+        <span>฿</span>
+
+        <input
+            type="number"
+            id="sales-amount"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+        >
+    </div>
+
+    <button id="submit-sales" class="submit-record-button">
+        บันทึกยอดขาย
+    </button>
+
+</div>
+<div id="expense-form" class="sales-form">
+    <div class="sales-form-header">
+        <button id="back-to-record-options-expense" class="form-back">
+            ←
+        </button>
+
+        <div>
+            <h2>บันทึกค่าใช้จ่าย</h2>
+            <p>กรอกข้อมูลค่าใช้จ่ายที่ต้องการบันทึก</p>
+        </div>
+    </div>
+
+    <div class="sales-input-group">
+        <label for="expense-amount">จำนวนเงิน</label>
+
+        <div class="sales-amount-input">
+            <span>฿</span>
+
+            <input
+                type="number"
+                id="expense-amount"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+            >
+        </div>
+    </div>
+
+    <div class="sales-input-group">
+        <label for="expense-description">รายละเอียดค่าใช้จ่าย</label>
+
+        <input
+            type="text"
+            id="expense-description"
+            placeholder="เช่น ค่านม, ค่าน้ำแข็ง, ค่าวัตถุดิบ"
+        >
+    </div>
+
+    <button id="submit-expense" class="submit-record-button">
+        บันทึกค่าใช้จ่าย
+    </button>
+</div>
+
+<div id="customer-form" class="sales-form">
+
+    <div class="sales-form-header">
+        <button
+            id="back-to-record-options-customer"
+            class="form-back"
+        >
+            ←
+        </button>
+
+        <div>
+            <h2>บันทึกลูกค้า</h2>
+            <p>กรอกจำนวนลูกค้าที่ต้องการบันทึก</p>
+        </div>
+    </div>
+
+    <div class="sales-input-group">
+        <label for="customer-count">จำนวนลูกค้า</label>
+
+        <input
+            type="number"
+            id="customer-count"
+            placeholder="0"
+            min="1"
+            step="1"
+        >
+    </div>
+
+    <button
+        id="submit-customer"
+        class="submit-record-button"
+    >
+        บันทึกลูกค้า
+    </button>
+
+</div>
+
+<div id="product-form" class="sales-form">
+
+    <div class="sales-form-header">
+        <button
+            id="back-to-record-options-product"
+            class="form-back"
+        >
+            ←
+        </button>
+
+        <div>
+            <h2>ขายสินค้า</h2>
+            <p>กรอกข้อมูลสินค้าที่ขาย</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="product-name">ชื่อสินค้า</label>
+        <input
+            type="text"
+            id="product-name"
+            placeholder="เช่น มัทฉะลาเต้"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="product-quantity">จำนวน</label>
+        <input
+            type="number"
+            id="product-quantity"
+            placeholder="0"
+            min="1"
+            step="1"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="product-amount">ยอดขายรวม</label>
+        <div class="money-input">
+            <span>฿</span>
+            <input
+                type="number"
+                id="product-amount"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+            >
+        </div>
+    </div>
+
+    <button
+        id="submit-product"
+        class="submit-record-button"
+    >
+        บันทึกการขายสินค้า
+    </button>
+
+</div>
+
+    </div>
+</div>
+
     <nav class="bottom-nav">
 
         <button class="nav-item active">
@@ -445,7 +672,7 @@
             <small>หน้าหลัก</small>
         </button>
 
-        <button class="nav-item">
+        <button class="nav-item" id="record-button">
             <span>➕</span>
             <small>บันทึก</small>
         </button>
@@ -463,7 +690,7 @@
     </nav>
 
 
-    <script src="script.js"></script>
+    <script src="./script.js?v=27"></script>
 
 </body>
 </html>
