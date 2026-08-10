@@ -85,8 +85,29 @@ def get_shop_access_message(shop):
             today = get_thailand_time().date()
 
             if today > trial_end:
+                plan_name = str(
+                    shop.get("plan_name", "")
+                ).strip().lower()
+
+                if plan_name == "trial":
+                    expiry_title = (
+                        "⏰ ระยะเวลาทดลองใช้ของร้านหมดแล้ว"
+                    )
+                elif plan_name == "basic":
+                    expiry_title = (
+                        "⏰ สิทธิ์ใช้งานแพ็กเกจ Basic หมดอายุแล้ว"
+                    )
+                elif plan_name == "pro":
+                    expiry_title = (
+                        "⏰ สิทธิ์ใช้งานแพ็กเกจ Pro หมดอายุแล้ว"
+                    )
+                else:
+                    expiry_title = (
+                        "⏰ สิทธิ์ใช้งาน RooYod หมดอายุแล้ว"
+                    )
+
                 return (
-                    "⏰ ระยะเวลาทดลองใช้ของร้านหมดแล้ว\n\n"
+                    f"{expiry_title}\n\n"
                     f"หมดอายุวันที่: {trial_end_text}\n\n"
                     "กรุณาติดต่อผู้ดูแล RooYod "
                     "เพื่อต่ออายุการใช้งาน"
