@@ -423,7 +423,20 @@ def renew_shop_plan(
     records = worksheet.get_all_records()
 
     target_shop_id = str(shop_id).strip().upper()
-    cleaned_plan_name = str(plan_name).strip()
+    cleaned_plan_name = str(
+        plan_name
+    ).strip().lower()
+
+    allowed_plans = {
+        "basic",
+        "pro",
+    }
+
+    if cleaned_plan_name not in allowed_plans:
+        return {
+            "success": False,
+            "reason": "invalid_plan_name",
+        }
 
     try:
         renewal_days = int(days)

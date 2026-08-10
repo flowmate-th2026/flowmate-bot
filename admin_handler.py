@@ -56,6 +56,16 @@ def handle_renew_shop_message(user_message):
             "กรุณาใส่จำนวนเต็มมากกว่า 0"
         )
 
+    if reason == "invalid_plan_name":
+        return (
+            "❌ ชื่อแพ็กเกจไม่ถูกต้อง\n\n"
+            "แพ็กเกจที่ใช้ได้:\n"
+            "- Basic\n"
+            "- Pro\n\n"
+            "ตัวอย่าง:\n"
+            "ต่ออายุ SHOP001 30 Basic"
+        )
+
     if reason == "missing_plan_name":
         return (
             "❌ กรุณาระบุชื่อแพ็กเกจ"
