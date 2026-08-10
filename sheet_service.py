@@ -206,31 +206,74 @@ def get_pending_shops():
 
     return pending_shops
 
-def activate_shop(
+def create_shop_spreadsheet(
     shop_id,
-    sheet_id,
+    shop_name,
 ):
     """
-    เปิดใช้งานร้านโดยใส่ Sheet ID
-    และเปลี่ยนสถานะเป็น active
+    สร้าง Google Sheet ใหม่สำหรับร้าน
+    และเตรียมหัวตารางให้พร้อมใช้งาน
     """
+
+    google_client = gspread.service_account(
+        filename=GOOGLE_CREDENTIALS_FILE
+    )
+
+    spreadsheet_title = (
+        f"RooYod - {shop_id} - {shop_name}"
+    )
+
+    spreadsheet = google_client.create(
+        spreadsheet_title
+    )
+
+    worksheet = spreadsheet.get_worksheet(0)
+
+    worksheet.update(
+    range_name="A1:G1",
+    values=[
+        [
+            "วันที่",
+            "เวลา",
+            "ประเภท",
+            "จำนวนเงิน",
+            "รายละเอียด",
+            "ชื่อสินค้า",
+            "จำนวนขาย",
+        ]
+    ],
+)
+
+    return spreadsheet.id  
+
+def activate_shop(
+    shop_id,
+    sheet_id=None,
+):
+    """
+    เปิดใช้งานร้าน
+
+    - ถ้ามี sheet_id อยู่แล้ว จะใช้ของเดิม
+    - ถ้ายังไม่มี sheet_id จะสร้าง Google Sheet ใหม่อัตโนมัติ
+    - ตั้งสถานะ active
+    - เริ่มทดลองใช้ 14 วัน
+    - ตั้งแพ็กเกจเริ่มต้นเป็น trial
+    - ไม่สร้าง Sheet ซ้ำถ้าร้านถูกเปิดใช้งานแล้ว
+    """
+
+    from datetime import datetime, timedelta
+    from zoneinfo import ZoneInfo
 
     worksheet = get_registry_worksheet()
     records = worksheet.get_all_records()
 
     target_shop_id = str(shop_id).strip().upper()
-    target_sheet_id = str(sheet_id).strip()
+    supplied_sheet_id = str(sheet_id or "").strip()
 
     if not target_shop_id:
         return {
             "success": False,
             "reason": "missing_shop_id",
-        }
-
-    if not target_sheet_id:
-        return {
-            "success": False,
-            "reason": "missing_sheet_id",
         }
 
     for row_index, row in enumerate(
@@ -241,31 +284,125 @@ def activate_shop(
             row.get("shop_id", "")
         ).strip().upper()
 
-        if current_shop_id == target_shop_id:
-            shop_name = str(
-                row.get("shop_name", "")
-            ).strip()
+        if current_shop_id != target_shop_id:
+            continue
 
-            worksheet.update_cell(
-                row_index,
-                4,
-                target_sheet_id,
-            )
+        shop_name = str(
+            row.get("shop_name", "")
+        ).strip()
 
-            worksheet.update_cell(
-                row_index,
-                5,
-                "active",
-            )
+        existing_sheet_id = str(
+            row.get("sheet_id", "")
+        ).strip()
 
+        current_status = str(
+            row.get("status", "")
+        ).strip().lower()
+
+        existing_trial_start = str(
+            row.get("trial_start", "")
+        ).strip()
+
+        existing_trial_end = str(
+            row.get("trial_end", "")
+        ).strip()
+
+        existing_plan_name = str(
+            row.get("plan_name", "")
+        ).strip()
+
+        # ถ้าร้าน active และมี Sheet อยู่แล้ว
+        # ไม่สร้าง Sheet ใหม่ และไม่รีเซ็ต Trial
+        if (
+            current_status == "active"
+            and existing_sheet_id
+        ):
             return {
                 "success": True,
-                "reason": "activated",
+                "reason": "already_active",
                 "shop_id": target_shop_id,
                 "shop_name": shop_name,
-                "sheet_id": target_sheet_id,
+                "sheet_id": existing_sheet_id,
                 "status": "active",
+                "trial_start": existing_trial_start,
+                "trial_end": existing_trial_end,
+                "plan_name": existing_plan_name,
             }
+
+        # เลือก Sheet ID
+        target_sheet_id = (
+            supplied_sheet_id
+            or existing_sheet_id
+        )
+
+        # ถ้ายังไม่มี Sheet ให้ RooYod สร้างเอง
+        if not target_sheet_id:
+            target_sheet_id = create_shop_spreadsheet(
+                shop_id=target_shop_id,
+                shop_name=shop_name,
+            )
+
+        thailand_time = datetime.now(
+            ZoneInfo("Asia/Bangkok")
+        )
+
+        trial_start = thailand_time.date()
+        trial_end = trial_start + timedelta(days=14)
+
+        trial_start_text = trial_start.strftime(
+            "%d/%m/%Y"
+        )
+
+        trial_end_text = trial_end.strftime(
+            "%d/%m/%Y"
+        )
+
+        # D = sheet_id
+        worksheet.update_cell(
+            row_index,
+            4,
+            target_sheet_id,
+        )
+
+        # E = status
+        worksheet.update_cell(
+            row_index,
+            5,
+            "active",
+        )
+
+        # F = trial_start
+        worksheet.update_cell(
+            row_index,
+            6,
+            trial_start_text,
+        )
+
+        # G = trial_end
+        worksheet.update_cell(
+            row_index,
+            7,
+            trial_end_text,
+        )
+
+        # H = plan_name
+        worksheet.update_cell(
+            row_index,
+            8,
+            "trial",
+        )
+
+        return {
+            "success": True,
+            "reason": "activated",
+            "shop_id": target_shop_id,
+            "shop_name": shop_name,
+            "sheet_id": target_sheet_id,
+            "status": "active",
+            "trial_start": trial_start_text,
+            "trial_end": trial_end_text,
+            "plan_name": "trial",
+        }
 
     return {
         "success": False,

@@ -113,31 +113,42 @@ def handle_activate_shop_message(user_message):
     เปิดใช้งานร้านใหม่
 
     ตัวอย่าง:
-    เปิดร้าน SHOP003 1AbCdEfGh...
+    เปิดร้าน SHOP003
     """
 
-    command_parts = user_message.split(maxsplit=2)
+    command_parts = user_message.split()
 
-    if len(command_parts) < 3:
+    if len(command_parts) < 2:
         return (
             "🏪 รูปแบบคำสั่งเปิดร้านไม่ถูกต้อง\n\n"
             "กรุณาพิมพ์:\n"
-            "เปิดร้าน SHOP003 SHEET_ID"
+            "เปิดร้าน SHOP003"
         )
 
     shop_id = command_parts[1].strip()
-    sheet_id = command_parts[2].strip()
 
     result = activate_shop(
         shop_id=shop_id,
-        sheet_id=sheet_id,
     )
 
     if result["success"]:
+        reason = result.get("reason", "")
+
+        if reason == "already_active":
+            return (
+                "✅ ร้านนี้เปิดใช้งานอยู่แล้ว\n\n"
+                f"รหัสร้าน: {result['shop_id']}\n"
+                f"ชื่อร้าน: {result['shop_name']}\n"
+                "สถานะ: active"
+            )
+
         return (
             "✅ เปิดใช้งานร้านเรียบร้อยแล้ว\n\n"
             f"รหัสร้าน: {result['shop_id']}\n"
             f"ชื่อร้าน: {result['shop_name']}\n"
+            f"แพ็กเกจ: {result.get('plan_name', 'trial')}\n"
+            f"เริ่มทดลอง: {result.get('trial_start', '-')}\n"
+            f"หมดอายุ: {result.get('trial_end', '-')}\n"
             "สถานะ: active\n\n"
             "ร้านสามารถเริ่มใช้งาน RooYod ได้แล้วค่ะ"
         )
@@ -150,12 +161,14 @@ def handle_activate_shop_message(user_message):
             f"รหัสที่ค้นหา: {result.get('shop_id', '-')}"
         )
 
-    if reason == "missing_sheet_id":
+    if reason == "missing_shop_id":
         return (
-            "❌ กรุณาใส่ Sheet ID ของร้าน"
+            "❌ กรุณาใส่รหัสร้าน\n\n"
+            "ตัวอย่าง:\n"
+            "เปิดร้าน SHOP003"
         )
 
     return (
         "⚠️ ระบบยังเปิดใช้งานร้านไม่ได้ในขณะนี้\n\n"
-        "กรุณาตรวจรหัสร้านและ Sheet ID แล้วลองอีกครั้ง"
+        "กรุณาตรวจรหัสร้านแล้วลองอีกครั้ง"
     )
