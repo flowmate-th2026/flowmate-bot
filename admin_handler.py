@@ -113,22 +113,31 @@ def handle_activate_shop_message(user_message):
     เปิดใช้งานร้านใหม่
 
     ตัวอย่าง:
-    เปิดร้าน SHOP003
+    เปิดร้าน SHOP004 SHEET_ID
+
+    หรือในอนาคต:
+    เปิดร้าน SHOP004
     """
 
-    command_parts = user_message.split()
+    command_parts = user_message.split(maxsplit=2)
 
     if len(command_parts) < 2:
         return (
             "🏪 รูปแบบคำสั่งเปิดร้านไม่ถูกต้อง\n\n"
             "กรุณาพิมพ์:\n"
-            "เปิดร้าน SHOP003"
+            "เปิดร้าน SHOP004 SHEET_ID"
         )
 
     shop_id = command_parts[1].strip()
 
+    sheet_id = None
+
+    if len(command_parts) >= 3:
+        sheet_id = command_parts[2].strip()
+
     result = activate_shop(
         shop_id=shop_id,
+        sheet_id=sheet_id,
     )
 
     if result["success"]:
@@ -159,13 +168,6 @@ def handle_activate_shop_message(user_message):
         return (
             "❌ ไม่พบรหัสร้านนี้ในระบบ\n\n"
             f"รหัสที่ค้นหา: {result.get('shop_id', '-')}"
-        )
-
-    if reason == "missing_shop_id":
-        return (
-            "❌ กรุณาใส่รหัสร้าน\n\n"
-            "ตัวอย่าง:\n"
-            "เปิดร้าน SHOP003"
         )
 
     return (
