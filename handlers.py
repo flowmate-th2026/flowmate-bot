@@ -30,6 +30,7 @@ from profile_handler import (
     handle_update_shop_profile_message,
 )
 from plan_service import get_feature_access_message
+from plan_handler import handle_plan_status_message
 
 def get_shop_access_message(shop):
     """
@@ -189,6 +190,16 @@ def handle_text_message(event, line_bot_api):
                 reply = handle_renew_shop_message(
                     user_message
                 )
+
+        elif normalized_message in [
+            "แพ็กเกจ",
+            "แพ็กเกจของฉัน",
+            "package",
+        ]:
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            reply = handle_plan_status_message(shop)       
         
         elif (
             normalized_message == "ลงทะเบียนร้าน"
