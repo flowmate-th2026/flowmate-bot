@@ -85,7 +85,7 @@ def get_shop_access_message(shop):
 
             today = get_thailand_time().date()
 
-            if today > trial_end:
+            if today >= trial_end:
                 plan_name = str(
                     shop.get("plan_name", "")
                 ).strip().lower()
