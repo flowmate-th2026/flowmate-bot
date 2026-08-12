@@ -15,3 +15,4 @@ GOOGLE_CREDENTIALS_FILE = os.getenv(
     os.path.join(BASE_DIR, "google-credentials.json")
 )
 ADMIN_LINE_USER_ID = os.getenv("ADMIN_LINE_USER_ID", "")
+EXPIRY_API_KEY = os.environ.get("EXPIRY_API_KEY", "")

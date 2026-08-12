@@ -5,7 +5,11 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage
 
-from config import CHANNEL_ACCESS_TOKEN, CHANNEL_SECRET
+from config import (
+    CHANNEL_ACCESS_TOKEN,
+    CHANNEL_SECRET,
+    EXPIRY_API_KEY,
+)
 from handlers import handle_text_message
 from report_service import get_daily_sales_report
 from services import (
@@ -14,6 +18,7 @@ from services import (
     record_customer,
     record_product,
 )
+from expiry_notifier import send_expiry_notifications
 
 app = Flask(__name__)
 
@@ -225,6 +230,30 @@ def create_product_api():
     })
 
     return response
+
+@app.route("/api/expiry-notifications", methods=["POST"])
+def run_expiry_notifications():
+    api_key = request.headers.get(
+        "X-Expiry-Key",
+        "",
+    )
+
+    if not EXPIRY_API_KEY or api_key != EXPIRY_API_KEY:
+        return jsonify(
+            {
+                "success": False,
+                "message": "Unauthorized",
+            }
+        ), 401
+
+    results = send_expiry_notifications(line_bot_api)
+
+    return jsonify(
+        {
+            "success": True,
+            "results": results,
+        }
+    )
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):

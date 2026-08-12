@@ -610,6 +610,64 @@ def update_shop_profile(
         "reason": "shop_not_found",
     }
 
+def update_last_expiry_notice(shop_id, notice_value):
+    """
+    บันทึกประวัติการแจ้งเตือนหมดอายุของร้าน
+    """
+
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    target_shop_id = str(shop_id).strip()
+    notice_value = str(notice_value).strip()
+
+    headers = worksheet.row_values(1)
+
+    if "last_expiry_notice" not in headers:
+        return {
+            "success": False,
+            "reason": "missing_last_expiry_notice_column",
+        }
+
+    column_index = headers.index("last_expiry_notice") + 1
+
+    for row_index, row in enumerate(
+        records,
+        start=2,
+    ):
+        current_shop_id = str(
+            row.get("shop_id", "")
+        ).strip()
+
+        if current_shop_id != target_shop_id:
+            continue
+
+        worksheet.update_cell(
+            row_index,
+            column_index,
+            notice_value,
+        )
+
+        return {
+            "success": True,
+            "shop_id": target_shop_id,
+            "notice_value": notice_value,
+        }
+
+    return {
+        "success": False,
+        "reason": "shop_not_found",
+    }
+
+def get_all_shops():
+    """
+    ดึงข้อมูลร้านค้าทั้งหมดจาก Shop Registry
+    """
+    worksheet = get_registry_worksheet()
+    records = worksheet.get_all_records()
+
+    return records
+
 def get_sales_worksheet(sheet_id=None):
     """
     เปิดชีตข้อมูลร้านค้า
