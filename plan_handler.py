@@ -90,8 +90,36 @@ def handle_plan_status_message(shop):
             elif days_left == 0:
                 status_text = "หมดอายุวันนี้"
                 days_text = "เหลือวันนี้เป็นวันสุดท้าย"
+                warning_text = (
+                    "🚨 แพ็กเกจของคุณหมดอายุวันนี้\n"
+                    "กรุณาต่ออายุเพื่อใช้งาน RooYod ต่อ"
+                )
+
+            elif days_left == 1:
+                status_text = "ใกล้หมดอายุ"
+                days_text = "เหลือ 1 วัน"
+                warning_text = (
+                    "🚨 แพ็กเกจของคุณจะหมดอายุพรุ่งนี้\n"
+                    "แนะนำให้ต่ออายุก่อนสิทธิ์ถูกระงับ"
+                )
+
+            elif days_left <= 3:
+                status_text = "ใกล้หมดอายุ"
+                days_text = f"{days_left} วัน"
+                warning_text = (
+                    f"⚠️ แพ็กเกจของคุณจะหมดอายุในอีก {days_left} วัน\n"
+                    "แนะนำให้ต่ออายุล่วงหน้า"
+                )
+
+            elif days_left <= 7:
+                status_text = "ใกล้หมดอายุ"
+                days_text = f"{days_left} วัน"
+                warning_text = (
+                    f"🔔 แพ็กเกจของคุณจะหมดอายุในอีก {days_left} วัน"
+                )
 
             else:
+                status_text = "ใช้งานได้"
                 days_text = f"{days_left} วัน"
 
         except ValueError:
@@ -131,12 +159,20 @@ def handle_plan_status_message(shop):
             f"{features_text}"
         )
 
+    warning_section = ""
+
+    if warning_text:
+        warning_section = (
+            f"\n\n{warning_text}"
+        )
+
     return (
-    "💳 แพ็กเกจ RooYod\n\n"
-    f"ร้าน: {shop_name}\n"
-    f"แพ็กเกจ: {display_plan}\n"
-    f"สถานะ: {status_text}\n"
-    f"หมดอายุ: {expiry_text}\n"
-    f"เหลืออีก: {days_text}\n\n"
-    f"{feature_section}"
-)
+        "💳 แพ็กเกจ RooYod\n\n"
+        f"ร้าน: {shop_name}\n"
+        f"แพ็กเกจ: {display_plan}\n"
+        f"สถานะ: {status_text}\n"
+        f"หมดอายุ: {expiry_text}\n"
+        f"เหลืออีก: {days_text}"
+        f"{warning_section}\n\n"
+        f"{feature_section}"
+    )
