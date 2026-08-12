@@ -83,16 +83,18 @@ def handle_plan_status_message(shop):
             today = get_thailand_time().date()
             days_left = (end_date - today).days
 
+            warning_text = ""
+
             if days_left < 0:
                 status_text = "หมดอายุแล้ว"
                 days_text = "0 วัน"
 
             elif days_left == 0:
-                status_text = "หมดอายุวันนี้"
+                status_text = "วันสุดท้าย"
                 days_text = "เหลือวันนี้เป็นวันสุดท้าย"
                 warning_text = (
-                    "🚨 แพ็กเกจของคุณหมดอายุวันนี้\n"
-                    "กรุณาต่ออายุเพื่อใช้งาน RooYod ต่อ"
+                    "🚨 วันนี้เป็นวันสุดท้ายของแพ็กเกจ\n"
+                    "กรุณาต่ออายุภายในวันนี้เพื่อใช้งาน RooYod ต่อเนื่อง"
                 )
 
             elif days_left == 1:

@@ -32,6 +32,7 @@ from profile_handler import (
 from plan_service import get_feature_access_message
 from plan_handler import handle_plan_status_message
 
+
 def get_shop_access_message(shop):
     """
     ตรวจสถานะร้านก่อนอนุญาตให้ใช้งานระบบ
@@ -85,7 +86,7 @@ def get_shop_access_message(shop):
 
             today = get_thailand_time().date()
 
-            if today >= trial_end:
+            if today > trial_end:
                 plan_name = str(
                     shop.get("plan_name", "")
                 ).strip().lower()
