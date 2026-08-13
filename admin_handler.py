@@ -2,6 +2,7 @@ from sheet_service import (
     activate_shop,
     get_pending_shops,
     renew_shop_plan,
+    validate_shop_sheet,
 )
 
 def handle_renew_shop_message(user_message):
@@ -145,6 +146,39 @@ def handle_activate_shop_message(user_message):
     if len(command_parts) >= 3:
         sheet_id = command_parts[2].strip()
 
+    if sheet_id:
+        sheet_check = validate_shop_sheet(sheet_id)
+
+    if not sheet_check["success"]:
+        reason = sheet_check.get("reason", "")
+
+        if reason == "permission_denied":
+            return (
+                "❌ RooYod ยังไม่มีสิทธิ์เข้าถึง Google Sheet นี้\n\n"
+                "กรุณาแชร์ Sheet ให้ Service Account "
+                "ด้วยสิทธิ์ Editor แล้วลองใหม่"
+            )
+
+        if reason == "sheet_not_found":
+            return (
+                "❌ ไม่สามารถเข้าถึง Google Sheet นี้ได้\n\n"
+                "กรุณาตรวจสอบว่า:\n"
+                "1. Sheet ID ถูกต้อง\n"
+                "2. แชร์ Sheet ให้ Service Account แล้ว\n"
+                "3. ให้สิทธิ์ Service Account เป็น Editor"
+            )
+
+        if reason == "worksheet_not_found":
+            return (
+                "❌ Google Sheet นี้ไม่มี Worksheet สำหรับใช้งาน"
+            )
+
+        return (
+            "⚠️ RooYod ยังไม่สามารถเข้าถึง Google Sheet นี้ได้\n\n"
+            "กรุณาตรวจสอบ Sheet ID และแชร์ Sheet ให้ "
+            "Service Account ด้วยสิทธิ์ Editor แล้วลองใหม่"
+        )
+
     result = activate_shop(
         shop_id=shop_id,
         sheet_id=sheet_id,
@@ -178,6 +212,13 @@ def handle_activate_shop_message(user_message):
         return (
             "❌ ไม่พบรหัสร้านนี้ในระบบ\n\n"
             f"รหัสที่ค้นหา: {result.get('shop_id', '-')}"
+        )
+
+    if reason == "missing_shop_name":
+        return (
+            "❌ ร้านนี้ยังไม่มีชื่อร้านในระบบ\n\n"
+            f"รหัสร้าน: {result.get('shop_id', '-')}\n"
+            "กรุณาเพิ่มชื่อร้านใน Shop Registry ก่อนเปิดใช้งาน"
         )
 
     return (

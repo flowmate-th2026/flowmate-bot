@@ -246,6 +246,76 @@ def create_shop_spreadsheet(
 
     return spreadsheet.id  
 
+def validate_shop_sheet(sheet_id):
+    """
+    ตรวจว่า Google Sheet เปิดได้จริง
+    และ Service Account มีสิทธิ์เข้าถึง
+    """
+
+    cleaned_sheet_id = str(sheet_id or "").strip()
+
+    if not cleaned_sheet_id:
+        return {
+            "success": False,
+            "reason": "missing_sheet_id",
+        }
+
+    try:
+        google_client = gspread.service_account(
+            filename=GOOGLE_CREDENTIALS_FILE
+        )
+
+        spreadsheet = google_client.open_by_key(
+            cleaned_sheet_id
+        )
+
+        worksheet = spreadsheet.get_worksheet(0)
+
+        if worksheet is None:
+            return {
+                "success": False,
+                "reason": "worksheet_not_found",
+            }
+
+        return {
+            "success": True,
+            "reason": "sheet_ready",
+            "sheet_id": cleaned_sheet_id,
+            "title": spreadsheet.title,
+        }
+
+    except gspread.exceptions.SpreadsheetNotFound:
+        return {
+            "success": False,
+            "reason": "sheet_not_found",
+        }
+
+    except gspread.exceptions.APIError as error:
+        status_code = getattr(
+            error.response,
+            "status_code",
+            None,
+        )
+
+        if status_code == 403:
+            return {
+                "success": False,
+                "reason": "permission_denied",
+            }
+
+        return {
+            "success": False,
+            "reason": "sheet_error",
+            "error": str(error),
+        }
+
+    except Exception as error:
+        return {
+            "success": False,
+            "reason": "sheet_error",
+            "error": str(error),
+        }
+
 def activate_shop(
     shop_id,
     sheet_id=None,
@@ -290,6 +360,13 @@ def activate_shop(
         shop_name = str(
             row.get("shop_name", "")
         ).strip()
+
+        if not shop_name:
+            return {
+                "success": False,
+                "reason": "missing_shop_name",
+                "shop_id": target_shop_id,
+            }
 
         existing_sheet_id = str(
             row.get("sheet_id", "")
