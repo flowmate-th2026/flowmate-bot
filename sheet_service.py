@@ -256,7 +256,7 @@ def activate_shop(
     - ถ้ามี sheet_id อยู่แล้ว จะใช้ของเดิม
     - ถ้ายังไม่มี sheet_id จะสร้าง Google Sheet ใหม่อัตโนมัติ
     - ตั้งสถานะ active
-    - เริ่มทดลองใช้ 14 วัน
+    - เริ่มทดลองใช้ 30 วัน
     - ตั้งแพ็กเกจเริ่มต้นเป็น trial
     - ไม่สร้าง Sheet ซ้ำถ้าร้านถูกเปิดใช้งานแล้ว
     """
@@ -347,7 +347,7 @@ def activate_shop(
         )
 
         trial_start = thailand_time.date()
-        trial_end = trial_start + timedelta(days=14)
+        trial_end = trial_start + timedelta(days=29)
 
         trial_start_text = trial_start.strftime(
             "%d/%m/%Y"
