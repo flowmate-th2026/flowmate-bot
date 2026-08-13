@@ -489,14 +489,14 @@ def renew_shop_plan(
         except ValueError:
             current_end = today
 
-        base_date = max(
-            today,
-            current_end,
-        )
-
-        new_end_date = base_date + timedelta(
-            days=renewal_days
-        )
+        if current_end >= today:
+            new_end_date = current_end + timedelta(
+                days=renewal_days
+            )
+        else:
+            new_end_date = today + timedelta(
+                days=renewal_days - 1
+            )
 
         new_end_text = new_end_date.strftime(
             "%d/%m/%Y"
