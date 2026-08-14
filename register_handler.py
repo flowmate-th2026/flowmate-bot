@@ -1,9 +1,13 @@
-from sheet_service import register_shop_request
+from curses import error
 
+from sheet_service import register_shop_request
+from linebot.models import TextSendMessage
+from config import ADMIN_LINE_USER_ID
 
 def handle_register_shop_message(
     user_message,
     line_user_id,
+    line_bot_api,
 ):
     """
     รับคำสั่งลงทะเบียนร้าน
@@ -38,6 +42,27 @@ def handle_register_shop_message(
     )
 
     if result["success"]:
+        admin_message = (
+            "🔔 มีร้านใหม่ขอลงทะเบียน RooYod\n\n"
+            f"รหัสร้าน: {result['shop_id']}\n"
+            f"ชื่อร้าน: {result['shop_name']}\n"
+            "สถานะ: pending\n\n"
+            f"พิมพ์ “เปิดร้าน {result['shop_id']}” "
+            "เพื่อตรวจสอบและเปิดใช้งาน"
+        )
+
+        try:
+            if ADMIN_LINE_USER_ID:
+                line_bot_api.push_message(
+                ADMIN_LINE_USER_ID,
+                TextSendMessage(text=admin_message),
+            )
+        except Exception as error:
+            print(
+                "ไม่สามารถส่งแจ้งเตือนร้านใหม่ให้ Admin:",
+                error,
+            )
+
         return (
             "✅ รับคำขอลงทะเบียนเรียบร้อยแล้ว\n\n"
             f"รหัสร้าน: {result['shop_id']}\n"

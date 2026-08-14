@@ -211,6 +211,7 @@ def handle_text_message(event, line_bot_api):
             reply = handle_register_shop_message(
                 user_message=user_message,
                 line_user_id=line_user_id,
+                line_bot_api=line_bot_api,
             )
 
         elif normalized_message in [
