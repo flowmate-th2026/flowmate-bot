@@ -149,27 +149,6 @@ def handle_text_message(event, line_bot_api):
         ]:
             reply = handle_menu_message(normalized_message)
 
-        elif normalized_message == "ทดสอบแจ้งเตือนร้านใหม่":
-            line_user_id = event.source.user_id
-
-            if line_user_id != ADMIN_LINE_USER_ID:
-                reply = "⛔ คำสั่งนี้ใช้ได้เฉพาะผู้ดูแลระบบ"
-            else:
-                test_message = (
-                    "🔔 มีร้านใหม่ขอลงทะเบียน RooYod\n\n"
-                    "รหัสร้าน: SHOPTEST\n"
-                    "ชื่อร้าน: ร้านทดสอบ Day34\n"
-                    "สถานะ: pending\n\n"
-                    "นี่คือข้อความทดสอบระบบแจ้งเตือน Admin"
-                )
-
-                line_bot_api.push_message(
-                    ADMIN_LINE_USER_ID,
-                    TextSendMessage(text=test_message),
-                )
-
-                reply = "✅ ส่งข้อความทดสอบแจ้งเตือน Admin แล้ว"
-
         elif normalized_message in [
             "ร้านรอเปิดใช้งาน",
             "ร้าน pending",
