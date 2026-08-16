@@ -8,57 +8,29 @@ def create_report_flex(
     profit,
     top_products,
 ):
-    """
-    RooYod Daily Report Flex Message
-    Day 36 - New Design
-    """
-
     def money(value):
         return f"{float(value):,.2f}"
 
     if top_products:
-        product_contents = [
-            {
-                "type": "text",
-                "text": (
-                    f"{medal} {product['name']} "
-                    f"— {product['quantity']} ชิ้น"
-                ),
-                "size": "sm",
-                "color": "#374151",
-                "wrap": True,
-                "margin": "sm",
-            }
-            for medal, product in zip(
-                ["🥇", "🥈", "🥉"],
-                top_products,
-            )
-        ]
+        top_text = (
+            f"🥇 {top_products[0]['name']} "
+            f"— {top_products[0]['quantity']} ชิ้น"
+        )
     else:
-        product_contents = [
-            {
-                "type": "text",
-                "text": "ยังไม่มีข้อมูลการขายสินค้าในวันนี้",
-                "size": "sm",
-                "color": "#6B7280",
-                "wrap": True,
-                "margin": "sm",
-            }
-        ]
+        top_text = "ยังไม่มีข้อมูลการขายสินค้าในวันนี้"
 
     flex_contents = {
         "type": "bubble",
-        "size": "mega",
-
+        "size": "kilo",
         "body": {
             "type": "box",
             "layout": "vertical",
             "backgroundColor": "#FFFFFF",
-            "paddingAll": "18px",
+            "paddingAll": "16px",
             "spacing": "md",
             "contents": [
 
-                # BRAND
+                # HEADER
                 {
                     "type": "box",
                     "layout": "horizontal",
@@ -71,16 +43,16 @@ def create_report_flex(
                             "contents": [
                                 {
                                     "type": "text",
-                                    "text": "RooYod",
+                                    "text": "RooYod by FlowMate",
                                     "weight": "bold",
-                                    "size": "xl",
+                                    "size": "lg",
                                     "color": "#2563EB",
                                 },
                                 {
                                     "type": "text",
-                                    "text": "by FlowMate",
+                                    "text": "ผู้ช่วยจัดการร้านค้า",
                                     "size": "xs",
-                                    "color": "#64748B",
+                                    "color": "#94A3B8",
                                     "margin": "xs",
                                 },
                             ],
@@ -88,8 +60,7 @@ def create_report_flex(
                         {
                             "type": "text",
                             "text": "🤖",
-                            "size": "xl",
-                            "align": "end",
+                            "size": "lg",
                         },
                     ],
                 },
@@ -97,8 +68,9 @@ def create_report_flex(
                 # TITLE
                 {
                     "type": "box",
-                    "layout": "vertical",
-                    "margin": "lg",
+                    "layout": "horizontal",
+                    "alignItems": "center",
+                    "margin": "sm",
                     "contents": [
                         {
                             "type": "text",
@@ -106,15 +78,25 @@ def create_report_flex(
                             "weight": "bold",
                             "size": "xl",
                             "color": "#0F2B5B",
+                            "flex": 1,
+                            "wrap": True,
                         },
                         {
                             "type": "text",
-                            "text": "สรุปยอดขายและกำไรของร้าน",
-                            "size": "sm",
+                            "text": "วันนี้",
+                            "size": "xs",
                             "color": "#64748B",
-                            "margin": "sm",
+                            "align": "end",
+                            "margin": "md",
                         },
                     ],
+                },
+                {
+                    "type": "text",
+                    "text": "สรุปยอดขายและกำไรของร้าน",
+                    "size": "xs",
+                    "color": "#64748B",
+                    "margin": "xs",
                 },
 
                 # ROW 1
@@ -122,34 +104,26 @@ def create_report_flex(
                     "type": "box",
                     "layout": "horizontal",
                     "spacing": "sm",
-                    "margin": "md",
+                    "margin": "sm",
                     "contents": [
-
-                        # SALES
                         {
                             "type": "box",
                             "layout": "vertical",
                             "flex": 1,
                             "backgroundColor": "#EFF6FF",
-                            "cornerRadius": "16px",
-                            "paddingAll": "14px",
+                            "cornerRadius": "14px",
+                            "paddingAll": "12px",
                             "contents": [
                                 {
                                     "type": "text",
-                                    "text": "🛍️",
-                                    "size": "lg",
-                                },
-                                {
-                                    "type": "text",
-                                    "text": "ยอดขาย",
-                                    "size": "sm",
+                                    "text": "🛍️ ยอดขาย",
+                                    "size": "xs",
                                     "color": "#475569",
-                                    "margin": "sm",
                                 },
                                 {
                                     "type": "text",
                                     "text": f"฿{money(sales)}",
-                                    "size": "xl",
+                                    "size": "lg",
                                     "weight": "bold",
                                     "color": "#2563EB",
                                     "margin": "sm",
@@ -157,32 +131,24 @@ def create_report_flex(
                                 },
                             ],
                         },
-
-                        # EXPENSE
                         {
                             "type": "box",
                             "layout": "vertical",
                             "flex": 1,
                             "backgroundColor": "#FDF2F8",
-                            "cornerRadius": "16px",
-                            "paddingAll": "14px",
+                            "cornerRadius": "14px",
+                            "paddingAll": "12px",
                             "contents": [
                                 {
                                     "type": "text",
-                                    "text": "🧾",
-                                    "size": "lg",
-                                },
-                                {
-                                    "type": "text",
-                                    "text": "ค่าใช้จ่าย",
-                                    "size": "sm",
+                                    "text": "🧾 ค่าใช้จ่าย",
+                                    "size": "xs",
                                     "color": "#475569",
-                                    "margin": "sm",
                                 },
                                 {
                                     "type": "text",
                                     "text": f"฿{money(expense)}",
-                                    "size": "xl",
+                                    "size": "lg",
                                     "weight": "bold",
                                     "color": "#DB2777",
                                     "margin": "sm",
@@ -199,64 +165,48 @@ def create_report_flex(
                     "layout": "horizontal",
                     "spacing": "sm",
                     "contents": [
-
-                        # CUSTOMER
                         {
                             "type": "box",
                             "layout": "vertical",
                             "flex": 1,
                             "backgroundColor": "#EFF6FF",
-                            "cornerRadius": "16px",
-                            "paddingAll": "14px",
+                            "cornerRadius": "14px",
+                            "paddingAll": "12px",
                             "contents": [
                                 {
                                     "type": "text",
-                                    "text": "👥",
-                                    "size": "lg",
-                                },
-                                {
-                                    "type": "text",
-                                    "text": "ลูกค้า",
-                                    "size": "sm",
+                                    "text": "👥 ลูกค้า",
+                                    "size": "xs",
                                     "color": "#475569",
-                                    "margin": "sm",
                                 },
                                 {
                                     "type": "text",
                                     "text": str(customer),
-                                    "size": "xl",
+                                    "size": "lg",
                                     "weight": "bold",
                                     "color": "#2563EB",
                                     "margin": "sm",
                                 },
                             ],
                         },
-
-                                                # PROFIT
-                        {
+                                                {
                             "type": "box",
                             "layout": "vertical",
                             "flex": 1,
                             "backgroundColor": "#F0FDF4",
-                            "cornerRadius": "16px",
-                            "paddingAll": "14px",
+                            "cornerRadius": "14px",
+                            "paddingAll": "12px",
                             "contents": [
                                 {
                                     "type": "text",
-                                    "text": "📈",
-                                    "size": "lg",
-                                },
-                                {
-                                    "type": "text",
-                                    "text": "กำไร",
-                                    "size": "sm",
+                                    "text": "📈 กำไร",
+                                    "size": "xs",
                                     "color": "#475569",
-                                    "margin": "sm",
                                 },
                                 {
                                     "type": "text",
                                     "text": f"฿{money(profit)}",
-                                    "size": "xl",
+                                    "size": "lg",
                                     "weight": "bold",
                                     "color": "#16A34A",
                                     "margin": "sm",
@@ -267,80 +217,73 @@ def create_report_flex(
                     ],
                 },
 
-                # TOP PRODUCTS
+                # TOP PRODUCT
                 {
                     "type": "box",
                     "layout": "vertical",
                     "backgroundColor": "#F8FAFC",
-                    "cornerRadius": "16px",
-                    "paddingAll": "16px",
-                    "margin": "md",
+                    "cornerRadius": "14px",
+                    "paddingAll": "12px",
                     "contents": [
                         {
                             "type": "text",
                             "text": "🏆 สินค้าขายดีวันนี้",
                             "weight": "bold",
-                            "size": "md",
+                            "size": "sm",
                             "color": "#1E40AF",
                         },
                         {
-                            "type": "box",
-                            "layout": "vertical",
+                            "type": "text",
+                            "text": top_text,
+                            "size": "xs",
+                            "color": "#475569",
+                            "wrap": True,
                             "margin": "sm",
-                            "contents": product_contents,
                         },
                     ],
                 },
 
-                # WEEKLY REPORT
+                # BUTTONS ROW
                 {
-                    "type": "button",
-                    "style": "primary",
-                    "height": "sm",
-                    "color": "#2563EB",
-                    "margin": "md",
-                    "action": {
-                        "type": "message",
-                        "label": "📅 รายงานสัปดาห์",
-                        "text": "รายงานสัปดาห์",
-                    },
+                    "type": "box",
+                    "layout": "horizontal",
+                    "spacing": "sm",
+                    "contents": [
+                        {
+                            "type": "button",
+                            "style": "primary",
+                            "height": "sm",
+                            "color": "#2563EB",
+                            "action": {
+                                "type": "message",
+                                "label": "สัปดาห์",
+                                "text": "รายงานสัปดาห์",
+                            },
+                        },
+                        {
+                            "type": "button",
+                            "style": "primary",
+                            "height": "sm",
+                            "color": "#16A34A",
+                            "action": {
+                                "type": "message",
+                                "label": "เดือน",
+                                "text": "รายงานเดือน",
+                            },
+                        },
+                    ],
                 },
 
-                # MONTHLY REPORT
-                {
-                    "type": "button",
-                    "style": "primary",
-                    "height": "sm",
-                    "color": "#16A34A",
-                    "margin": "sm",
-                    "action": {
-                        "type": "message",
-                        "label": "📆 รายงานเดือน",
-                        "text": "รายงานเดือน",
-                    },
-                },
-
-                # BACK TO MENU
+                # MENU BUTTON
                 {
                     "type": "button",
                     "style": "secondary",
                     "height": "sm",
-                    "margin": "sm",
                     "action": {
                         "type": "message",
                         "label": "🏠 กลับเมนู",
                         "text": "เมนู",
                     },
-                },
-
-                # FOOTER
-                {
-                    "type": "text",
-                    "text": "RooYod by FlowMate • ผู้ช่วยจัดการร้านค้า",
-                    "size": "xxs",
-                    "color": "#94A3B8",
-                    "align": "center",
-                    "margin": "lg",
                 },
             ],
         },
