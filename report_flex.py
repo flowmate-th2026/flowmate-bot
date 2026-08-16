@@ -23,38 +23,29 @@ def create_report_flex(
         "type": "bubble",
         "size": "kilo",
 
+        "hero": {
+            "type": "image",
+            "url": "https://flowmate-bot.onrender.com/static/images/header-rooyod.jpg",
+            "size": "full",
+            "aspectRatio": "20:7",
+            "aspectMode": "cover",
+        },
+
         "body": {
             "type": "box",
             "layout": "vertical",
             "backgroundColor": "#FFFFFF",
             "paddingAll": "14px",
             "spacing": "sm",
-
             "contents": [
 
-                # HEADER
+                # REPORT TITLE
                 {
-                    "type": "box",
-                    "layout": "horizontal",
-                    "alignItems": "center",
-                    "contents": [
-                        {
-                            "type": "text",
-                            "text": "🤖 RooYod",
-                            "weight": "bold",
-                            "size": "md",
-                            "color": "#2563EB",
-                            "flex": 1,
-                        },
-                        {
-                            "type": "text",
-                            "text": "สรุปยอดวันนี้",
-                            "weight": "bold",
-                            "size": "md",
-                            "color": "#0F2B5B",
-                            "align": "end",
-                        },
-                    ],
+                    "type": "text",
+                    "text": "📊 สรุปยอดวันนี้",
+                    "weight": "bold",
+                    "size": "md",
+                    "color": "#0F2B5B",
                 },
 
                 # ROW 1
