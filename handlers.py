@@ -141,7 +141,6 @@ def handle_text_message(event, line_bot_api):
             "เมนู",
             "menu",
             "ช่วยเหลือ",
-            "ยอดขาย",
             "กรอกยอดขายรวม",
             "บันทึกยอดขายรวม",
             "กรอกสินค้าที่ขาย",
@@ -278,7 +277,10 @@ def handle_text_message(event, line_bot_api):
             reply = handle_trial_status_message(shop)
         
         # บันทึกยอดขาย เช่น ยอดขาย 2500
-        elif normalized_message.startswith("ยอดขาย "):
+        elif (
+            normalized_message == "ยอดขาย"
+            or normalized_message.startswith("ยอดขาย ")
+        ):
             line_user_id = event.source.user_id
             shop = get_shop_by_line_user_id(line_user_id)
             access_message = get_shop_access_message(shop)
