@@ -1,5 +1,5 @@
 from linebot.models import FlexSendMessage
-
+from menu_flex import create_main_menu_flex
 
 def create_sales_flex_message():
     return FlexSendMessage(
@@ -124,21 +124,7 @@ def handle_menu_message(normalized_message):
         )
 
     if normalized_message in ["เมนู", "menu"]:
-        return (
-            "🤖 เมนู FlowMate\n\n"
-            "1️⃣ พิมพ์ “ยอดขาย 2500” เพื่อบันทึกยอดขายรวม\n"
-            "2️⃣ พิมพ์ “ขาย มัทฉะลาเต้ 2 110” "
-            "เพื่อบันทึกสินค้าที่ขาย\n"
-            "3️⃣ พิมพ์ “ค่าใช้จ่าย 350 ค่านม” "
-            "เพื่อบันทึกค่าใช้จ่าย\n"
-            "4️⃣ พิมพ์ “ลูกค้า 5” เพื่อบันทึกจำนวนลูกค้า\n"
-            "5️⃣ พิมพ์ “รายงาน” เพื่อดูรายงานประจำวัน\n"
-            "6️⃣ พิมพ์ “รายงานสัปดาห์” "
-            "เพื่อดูรายงานตั้งแต่วันจันทร์ถึงวันนี้\n"
-            "7️⃣ พิมพ์ “รายงานเดือน” "
-            "เพื่อดูรายงานตั้งแต่ต้นเดือนถึงวันนี้\n"
-            "8️⃣ พิมพ์ “ช่วยเหลือ” เพื่อดูวิธีใช้งาน"
-        )
+        return create_main_menu_flex()
 
     if normalized_message == "ช่วยเหลือ":
         return (
