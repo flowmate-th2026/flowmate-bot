@@ -44,7 +44,7 @@ def create_main_menu_flex():
                                 "height": "sm",
                                 "action": {
                                     "type": "message",
-                                    "label": "💰 บันทึกยอดขาย",
+                                    "label": "💰 ยอดขาย",
                                     "text": "บันทึกยอดขาย"
                                 }
                             },
@@ -104,7 +104,7 @@ def create_main_menu_flex():
                                 "height": "sm",
                                 "action": {
                                     "type": "message",
-                                    "label": "📊 ดูรายงาน",
+                                    "label": "📊 รายงาน",
                                     "text": "รายงาน"
                                 }
                             },
@@ -138,7 +138,7 @@ def create_main_menu_flex():
                                 "height": "sm",
                                 "action": {
                                     "type": "message",
-                                    "label": "❓ วิธีใช้งาน",
+                                    "label": "❓ วิธีใช้",
                                     "text": "ช่วยเหลือ"
                                 }
                             },
@@ -148,7 +148,7 @@ def create_main_menu_flex():
                                 "height": "sm",
                                 "action": {
                                     "type": "message",
-                                    "label": "✨ สถานะทดลองใช้",
+                                    "label": "✨ ทดลองใช้",
                                     "text": "สถานะทดลองใช้"
                                 }
                             }
