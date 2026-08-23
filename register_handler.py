@@ -1,4 +1,4 @@
-from curses import error
+#from curses import error
 
 from sheet_service import register_shop_request
 from linebot.models import TextSendMessage
@@ -90,5 +90,5 @@ def handle_register_shop_message(
 
     return (
         "⚠️ LINE บัญชีนี้มีข้อมูลอยู่ในระบบแล้ว\n\n"
-        "กรุณาติดต่อผู้ดูแล FlowMate"
+        "กรุณาติดต่อผู้ดูแล RooYod"
     )

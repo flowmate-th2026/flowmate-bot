@@ -3,7 +3,7 @@ from menu_flex import create_main_menu_flex
 
 def create_sales_flex_message():
     return FlexSendMessage(
-        alt_text="เมนูยอดขาย FlowMate",
+        alt_text="เมนูยอดขาย RooYod",
         contents={
             "type": "bubble",
             "size": "mega",
@@ -76,7 +76,7 @@ def create_sales_flex_message():
                 "contents": [
                     {
                         "type": "text",
-                        "text": "FlowMate • ผู้ช่วยจัดการร้านค้า",
+                        "text": "RooYod by FlowMate • ผู้ช่วยดูยอดร้าน",
                         "align": "center",
                         "size": "xs",
                         "color": "#9A7B5B",
@@ -94,7 +94,7 @@ def handle_menu_message(normalized_message):
 
     if normalized_message in ["สวัสดี", "หวัดดี", "hello", "hi"]:
         return (
-            "👋 สวัสดีค่ะ ยินดีต้อนรับสู่ FlowMate\n\n"
+            "👋 สวัสดีค่ะ ยินดีต้อนรับสู่ RooYod\n\n"
             "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งทั้งหมด"
         )
 
@@ -128,7 +128,7 @@ def handle_menu_message(normalized_message):
 
     if normalized_message == "ช่วยเหลือ":
         return (
-            "🆘 วิธีใช้งาน FlowMate\n\n"
+            "🆘 วิธีใช้งาน RooYod\n\n"
             "• เมนู\n"
             "• ยอดขาย 2500\n"
             "• ขาย มัทฉะลาเต้ 2 110\n"
@@ -143,6 +143,6 @@ def handle_menu_message(normalized_message):
         )
 
     return (
-        "ขออภัยค่ะ FlowMate ยังไม่เข้าใจคำสั่งนี้\n\n"
+        "ขออภัยค่ะ RooYod ยังไม่เข้าใจคำสั่งนี้\n\n"
         "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งที่ใช้ได้"
     )

@@ -58,19 +58,19 @@ def get_shop_access_message(shop):
     if status == "inactive":
         return (
             "⛔ ร้านนี้ถูกระงับการใช้งานชั่วคราว\n\n"
-            "กรุณาติดต่อผู้ดูแล FlowMate"
+            "กรุณาติดต่อผู้ดูแล RooYod"
         )
 
     if status != "active":
         return (
             "⚠️ สถานะร้านไม่ถูกต้อง\n\n"
-            "กรุณาติดต่อผู้ดูแล FlowMate"
+            "กรุณาติดต่อผู้ดูแล RooYod"
         )
 
     if not sheet_id:
         return (
             "⚠️ ร้านเปิดใช้งานแล้ว แต่ยังไม่ได้เชื่อม Google Sheets\n\n"
-            "กรุณาติดต่อผู้ดูแล FlowMate"
+            "กรุณาติดต่อผู้ดูแล RooYod"
         )
 
     trial_end_text = str(
@@ -450,7 +450,7 @@ def handle_text_message(event, line_bot_api):
         # ไม่พบคำสั่ง
         else:
             reply = (
-                "ขออภัยค่ะ FlowMate ยังไม่เข้าใจข้อความนี้\n\n"
+                "ขออภัยค่ะ RooYod ยังไม่เข้าใจข้อความนี้\n\n"
                 "พิมพ์คำว่า “เมนู” เพื่อดูคำสั่งที่ใช้ได้"
             )
 

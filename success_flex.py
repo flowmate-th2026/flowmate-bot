@@ -226,7 +226,7 @@ def create_success_flex(
                 },
                 {
                     "type": "text",
-                    "text": "FlowMate • ผู้ช่วยจัดการร้านค้า",
+                    "text": "RooYod by FlowMate • ผู้ช่วยดูยอดร้าน",
                     "size": "xs",
                     "color": "#999999",
                     "align": "center",
