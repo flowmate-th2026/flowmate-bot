@@ -447,6 +447,56 @@ def handle_text_message(event, line_bot_api):
                     sheet_id=shop["sheet_id"],
                 )
 
+        elif (
+            normalized_message == "แจ้งปัญหา"
+            or normalized_message.startswith("แจ้งปัญหา ")
+            or normalized_message == "แนะนำ"
+            or normalized_message.startswith("แนะนำ ")
+        ):
+            line_user_id = event.source.user_id
+            shop = get_shop_by_line_user_id(line_user_id)
+
+            if normalized_message.startswith("แจ้งปัญหา"):
+                feedback_type = "แจ้งปัญหา"
+                feedback_text = user_message[len("แจ้งปัญหา"):].strip()
+            else:
+                feedback_type = "ข้อเสนอแนะ"
+                feedback_text = user_message[len("แนะนำ"):].strip()
+
+            if not feedback_text:
+                reply = (
+                    "💬 กรุณาพิมพ์รายละเอียดต่อท้ายคำสั่งค่ะ\n\n"
+                    "ตัวอย่าง:\n"
+                    "แจ้งปัญหา รายงานไม่ขึ้น\n"
+                    "แนะนำ อยากให้มีสรุปยอดเมื่อวาน"
+                )
+            else:
+                shop_id = shop["shop_id"] if shop else "-"
+                shop_name = shop["shop_name"] if shop else "-"
+
+                admin_message = (
+                    "🔔 Feedback ใหม่จาก RooYod\n\n"
+                    f"ประเภท: {feedback_type}\n"
+                    f"รหัสร้าน: {shop_id}\n"
+                    f"ชื่อร้าน: {shop_name}\n"
+                    f"ข้อความ: {feedback_text}"
+                )
+
+                try:
+                    if ADMIN_LINE_USER_ID:
+                        line_bot_api.push_message(
+                            ADMIN_LINE_USER_ID,
+                            TextSendMessage(text=admin_message),
+                        )
+                except Exception as error:
+                    print("ไม่สามารถส่ง Feedback ให้ Admin:", error)
+
+                reply = (
+                    "✅ รับข้อความเรียบร้อยแล้วค่ะ\n\n"
+                    "ขอบคุณที่ช่วยให้ RooYod ดีขึ้นนะคะ 💙💚\n"
+                    "ทีมจะนำ Feedback นี้ไปตรวจสอบและพัฒนาต่อค่ะ"
+                )
+
         # ไม่พบคำสั่ง
         else:
             reply = (
