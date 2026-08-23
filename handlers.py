@@ -200,6 +200,19 @@ def handle_text_message(event, line_bot_api):
             shop = get_shop_by_line_user_id(line_user_id)
 
             reply = handle_plan_status_message(shop)       
+
+        elif normalized_message in [
+            "สมัคร",
+            "สมัครใช้งาน",
+            "เริ่มใช้งาน",
+        ]:
+            reply = (
+                "🏪 สมัครใช้งาน RooYod\n\n"
+                "เริ่มต้นง่าย ๆ เพียงพิมพ์\n"
+                "ลงทะเบียนร้าน ตามด้วยชื่อร้านของคุณ\n\n"
+                "ตัวอย่าง:\n"
+                "ลงทะเบียนร้าน คาเฟ่บ้านสวน"
+            )
         
         elif (
             normalized_message == "ลงทะเบียนร้าน"
