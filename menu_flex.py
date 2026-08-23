@@ -56,7 +56,7 @@ def create_main_menu_flex():
                                 "action": {
                                     "type": "message",
                                     "label": "🛒 ขายสินค้า",
-                                    "text": "ขายสินค้า"
+                                    "text": "บันทึกสินค้าที่ขาย"
                                 }
                             }
                         ]
